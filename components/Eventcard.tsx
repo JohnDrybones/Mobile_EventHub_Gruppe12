@@ -3,19 +3,19 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 const getCategoryColor = (category: string) => {
   switch (category) {
-    case 'Technology': return { background: '#e0f2fe', text: '#0284c7' };
-    case 'Music': return { background: '#fee2e2', text: '#ef4444' };      
-    case 'Community': return { background: '#dcfce7', text: '#16a34a' };   
+    case 'Technology': return { background: '#e0f2fe', text: '#0284c7' }; 
+    case 'Music': return { background: '#fee2e2', text: '#ef4444' };       
+    case 'Community': return { background: '#dcfce7', text: '#16a34a' };    
     case 'Business': return { background: '#fef3c7', text: '#f59e0b' };     
-    case 'Art': return { background: '#f3e8ff', text: '#a855f7' };         
+    case 'Art': return { background: '#f3e8ff', text: '#a855f7' };          
     default: return { background: '#f3f4f6', text: '#4b5563' };
   }
 };
 
-
 const EventCard = ({ event }: any) => {
   const colors = getCategoryColor(event.category);
-    const imageSource = { uri: event.imageUrl };
+  
+  const imageSource = { uri: event.imageUrl };
 
   return (
     <View style={styles.card}>
@@ -68,29 +68,23 @@ const EventCard = ({ event }: any) => {
   );
 };
 
-const CARD_WIDTH = '90%';
-
 const styles = StyleSheet.create({
   card: {
-    // Fixed width for horizontal scrolling
-    width: CARD_WIDTH,
-    marginHorizontal: 12, 
+    width: '100%', 
+    marginBottom: 16, 
     backgroundColor: '#ffffff',
     borderRadius: 16,
-    // iOS shadow
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 6,
-    // Android elevation
     elevation: 8,
-    overflow: 'hidden',
-    marginBottom: 8, 
+    overflow: 'hidden', 
   },
   image: {
-    height: 128, 
-    width: '100%',
-    resizeMode: 'cover',
+    height: 160, 
+    width: '100%', 
+    resizeMode: 'cover', 
   },
   contentContainer: {
     padding: 16,
@@ -100,31 +94,31 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 4,
     borderRadius: 20,
-    alignSelf: 'flex-start', 
+    alignSelf: 'flex-start',
   },
   badgeText: {
     fontSize: 12,
     fontWeight: '600',
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
-    color: '#1f2937', 
+    color: '#1f2937',
   },
   detailsContainer: {
-    gap: 8, 
+    gap: 8,
   },
   detailRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   icon: {
-    fontSize: 16,
+    fontSize: 18,
     marginRight: 8,
-    color: '#4f46e5', 
+    color: '#4f46e5',
   },
   detailText: {
-    fontSize: 14,
+    fontSize: 15,
     color: '#4b5563',
     flexShrink: 1,
   },

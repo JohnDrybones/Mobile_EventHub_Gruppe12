@@ -5,14 +5,14 @@ import EventCard from './../../components/Eventcard';
 
 // --- Mock Data (Moved here for easy access in the screen) ---
 const mockEvents = [
-  { id: 1, title: "Tech Innovators Summit: Future of AI", date: "Oct 25, 2025", time: "10:00 AM", location: "Convention Center Hall A, 123 Tech Blvd", category: "Technology", imageUrl: "https://placehold.co/600x400/3b82f6/ffffff?text=Tech+Summit" },
-  { id: 2, title: "Jazz Night Live with the Blue Tones", date: "Nov 01, 2025", time: "7:30 PM", location: "The Blue Note Club, Downtown", category: "Music", imageUrl: "https://placehold.co/600x400/ef4444/ffffff?text=Jazz+Live" },
-  { id: 3, title: "Local Farmers Market & Harvest Festival", date: "Oct 26, 2025", time: "9:00 AM", location: "Downtown Square, Central Park Area", category: "Community", imageUrl: "https://placehold.co/600x400/22c55e/ffffff?text=Market+Day" },
-  { id: 4, title: "Startup Pitch Competition Q4 Finals", date: "Nov 15, 2025", time: "2:00 PM", location: "Innovation Hub, East Side Tower", category: "Business", imageUrl: "https://placehold.co/600x400/f59e0b/ffffff?text=Startup+Pitch" },
-  { id: 5, title: "Winter Art Exhibition: Modern Sculptures", date: "Dec 05, 2025", time: "6:00 PM", location: "City Art Gallery, Main Exhibition Room", category: "Art", imageUrl: "https://placehold.co/600x400/8b5cf6/ffffff?text=Art+Show" },
+  { id: 1, title: "Tech Innovators Summit: Future of AI", date: "Oct 25, 2025", time: "10:00 AM", location: "Convention Center Hall A, 123 Tech Blvd", category: "Technology", imageUrl: "https://picsum.photos/id/1015/600/400" },
+  { id: 2, title: "Jazz Night Live with the Blue Tones", date: "Nov 01, 2025", time: "7:30 PM", location: "The Blue Note Club, Downtown", category: "Music", imageUrl: "https://picsum.photos/id/1025/600/400" },
+  { id: 3, title: "Local Farmers Market & Harvest Festival", date: "Oct 26, 2025", time: "9:00 AM", location: "Downtown Square, Central Park Area", category: "Community", imageUrl: "https://picsum.photos/id/1080/600/400" },
+  { id: 4, title: "Startup Pitch Competition Q4 Finals", date: "Nov 15, 2025", time: "2:00 PM", location: "Innovation Hub, East Side Tower", category: "Business", imageUrl: "https://picsum.photos/id/1043/600/400" },
+  { id: 5, title: "Winter Art Exhibition: Modern Sculptures", date: "Dec 05, 2025", time: "6:00 PM", location: "City Art Gallery, Main Exhibition Room", category: "Art", imageUrl: "https://picsum.photos/id/1060/600/400" },
 ];
 
-export default function EventsScreen() {
+export default function EventsScreen() { 
   return (
     // Change the root View to a ScrollView to enable vertical scrolling for the whole page content
     <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContent}>
@@ -57,12 +57,10 @@ const styles = StyleSheet.create({
     // We use padding on the ScrollView itself, so flex: 1 is needed on ScrollView
     flex: 1, 
     backgroundColor: '#f9fafb', // light gray background
-    // REMOVED: justifyContent: 'center' was moved to scrollViewContent
   },
   scrollViewContent: {
     paddingTop: 40, // Space for status bar on iOS/Android
     paddingBottom: 20, // Padding at the bottom of the scrollable area
-    justifyContent: 'center', // ADDED: Correctly applies centering to the content
   },
   header: {
     paddingHorizontal: 20,
