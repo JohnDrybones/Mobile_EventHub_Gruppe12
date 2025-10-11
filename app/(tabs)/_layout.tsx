@@ -24,10 +24,10 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="events"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <MaterialIcons size={28} name="explore" color={color} />,
+          title: 'Events',
+          tabBarIcon: ({ color }) => <MaterialIcons size={28} name="event" color={color} />,
         }}
       />
       <Tabs.Screen
