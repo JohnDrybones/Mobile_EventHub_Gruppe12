@@ -1,3 +1,4 @@
+import { useRouter } from 'expo-router'; // 👈 import the router
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -14,12 +15,20 @@ const getCategoryColor = (category: string) => {
 
 const EventCard = ({ event }: any) => {
   const colors = getCategoryColor(event.category);
-  
+  const router = useRouter(); // 👈 initialize the router
+
+  const handleViewDetails = () => {
+    // 👇 navigate to event details page
+    router.push({
+      pathname: '/event/[id]',
+      params: { id: event.id },
+    });
+  };
+
   const imageSource = { uri: event.imageUrl };
 
   return (
     <View style={styles.card}>
-      
       <Image 
         source={imageSource}
         style={styles.image}
@@ -27,7 +36,6 @@ const EventCard = ({ event }: any) => {
       />
 
       <View style={styles.contentContainer}>
-        
         <View style={[styles.badge, { backgroundColor: colors.background }]}>
           <Text style={[styles.badgeText, { color: colors.text }]}>
             {event.category}
@@ -39,7 +47,6 @@ const EventCard = ({ event }: any) => {
         </Text>
 
         <View style={styles.detailsContainer}>
-          
           <View style={styles.detailRow}>
             <Text style={styles.icon}>{"\u{1F4C5}"}</Text> 
             <Text style={styles.detailText}>{event.date}</Text>
@@ -56,9 +63,10 @@ const EventCard = ({ event }: any) => {
           </View>
         </View>
 
+        {/* 👇 View Details button that navigates to /event/[id] */}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => console.log(`Viewing details for ${event.title}`)}
+          onPress={handleViewDetails}
           activeOpacity={0.7}
         >
           <Text style={styles.buttonText}>View Details</Text>
