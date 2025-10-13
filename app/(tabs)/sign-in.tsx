@@ -37,7 +37,6 @@ export default function SignInScreen() {
 
     <View style={styles.footer}>
       <Text style={styles.footerText}>Har du ikke en konto? </Text>
-      {/* Vi bruker en vanlig TouchableOpacity som en plassholder */}
       <TouchableOpacity onPress={() => Alert.alert('Kommer senere', 'Registreringsside er ikke laget ennå.')}>
         <Text style={styles.link}>Registrer deg</Text>
       </TouchableOpacity>
