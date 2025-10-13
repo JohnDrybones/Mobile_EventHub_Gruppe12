@@ -5,6 +5,8 @@ const mockEvents = [
   { id: 1, title: "Tech Innovators Summit: Future of AI", date: "Oct 25, 2025", time: "10:00 AM", location: "Convention Center Hall A, 123 Tech Blvd", category: "Technology", imageUrl: "https://picsum.photos/id/1015/600/400" },
   { id: 2, title: "Jazz Night Live with the Blue Tones", date: "Nov 01, 2025", time: "7:30 PM", location: "The Blue Note Club, Downtown", category: "Music", imageUrl: "https://picsum.photos/id/1025/600/400" },
   { id: 3, title: "Local Farmers Market & Harvest Festival", date: "Oct 26, 2025", time: "9:00 AM", location: "Downtown Square, Central Park Area", category: "Community", imageUrl: "https://picsum.photos/id/1080/600/400" },
+  { id: 4, title: "Startup Pitch Competition Q4 Finals", date: "Nov 15, 2025", time: "2:00 PM", location: "Innovation Hub, East Side Tower", category: "Business", imageUrl: "https://picsum.photos/id/1043/600/400" },
+  { id: 5, title: "Winter Art Exhibition: Modern Sculptures", date: "Dec 05, 2025", time: "6:00 PM", location: "City Art Gallery, Main Exhibition Room", category: "Art", imageUrl: "https://picsum.photos/id/1060/600/400" },
 ];
 
 export default function EventDetailScreen() {
