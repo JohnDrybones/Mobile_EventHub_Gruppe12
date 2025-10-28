@@ -1,6 +1,7 @@
 import React from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
-import EventCard from '../../components/Eventcard';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import EventCard from '../../components/EventCard';
 
 const mockEvents = [
   { id: 1, title: "Tech Innovators Summit: Future of AI", date: "Oct 25, 2025", time: "10:00 AM", location: "Convention Center Hall A, 123 Tech Blvd", category: "Technology", imageUrl: "https://picsum.photos/id/1015/600/400" },
@@ -11,36 +12,42 @@ const mockEvents = [
 const screenWidth = Dimensions.get('window').width;
 const isWideScreen = screenWidth > 768;
 
-export default function HomeScreen() { 
+export default function HomeScreen() {
   const listStyle = isWideScreen ? styles.horizontalList : styles.verticalList;
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-      
-      <View style={styles.welcomeContainer}>
-        <Text style={styles.title}>Velkommen til EventHub 🎉</Text>
-        <Text style={styles.subtitle}>Oppdag og delta på lokale events</Text>
-      </View>
+    <SafeAreaView style={styles.safeContainer}>
+      <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
 
-      <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>Populære Events</Text>
-        <View style={listStyle}>
-          {mockEvents.slice(0, 3).map((event) => (
-            <View key={event.id} style={isWideScreen ? styles.cardContainerWide : styles.cardContainerNarrow}>
-              <EventCard event={event} />
-            </View>
-          ))}
+        <View style={styles.welcomeContainer}>
+          <Text style={styles.title}>Velkommen til EventHub 🎉</Text>
+          <Text style={styles.subtitle}>Oppdag og delta på lokale events</Text>
         </View>
-      </View>
 
-    </ScrollView>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Populære Events</Text>
+          <View style={listStyle}>
+            {mockEvents.slice(0, 3).map((event) => (
+              <View key={event.id} style={isWideScreen ? styles.cardContainerWide : styles.cardContainerNarrow}>
+                <EventCard event={event} />
+              </View>
+            ))}
+          </View>
+        </View>
+
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, 
+    flex: 1,
     backgroundColor: '#f9fafb',
+  },
+  safeContainer: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
   },
   contentContainer: {
     paddingTop: 60,
@@ -64,8 +71,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   sectionContainer: {
-  //Mulig vi bruker den senere
-},
+    //Mulig vi bruker den senere
+  },
   sectionTitle: {
     fontSize: 22,
     fontWeight: '600',
@@ -74,7 +81,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   verticalList: {
-    paddingHorizontal: 12, 
+    paddingHorizontal: 12,
   },
   horizontalList: {
     flexDirection: 'row',

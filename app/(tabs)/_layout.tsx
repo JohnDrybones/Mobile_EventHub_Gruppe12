@@ -1,21 +1,20 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-
 import { HapticTab } from '@/components/haptic-tab';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Tabs } from 'expo-router';
+import React from 'react';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
         headerShown: false,
         tabBarButton: HapticTab,
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
@@ -30,8 +29,18 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="event" color={color} />,
         }}
       />
+
+      {/* 👇 This keeps /event routes in the app but hides them from the tab bar */}
       <Tabs.Screen
-        name="profile" 
+        name="event"
+        options={{
+          href: null, // hides this tab from the bottom bar
+          headerShown: false, // 👈 enable headers for this route group
+        }}
+      />
+
+      <Tabs.Screen
+        name="profile"
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="person" color={color} />,
@@ -44,7 +53,6 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="login" color={color} />,
         }}
       />
-
     </Tabs>
   );
 }

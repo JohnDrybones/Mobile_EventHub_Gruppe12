@@ -1,26 +1,25 @@
-import { useRouter } from 'expo-router'; // 👈 import the router
-import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useRouter } from 'expo-router';
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
 const getCategoryColor = (category: string) => {
   switch (category) {
-    case 'Technology': return { background: '#e0f2fe', text: '#0284c7' }; 
-    case 'Music': return { background: '#fee2e2', text: '#ef4444' };       
-    case 'Community': return { background: '#dcfce7', text: '#16a34a' };    
-    case 'Business': return { background: '#fef3c7', text: '#f59e0b' };     
-    case 'Art': return { background: '#f3e8ff', text: '#a855f7' };          
+    case 'Technology': return { background: '#e0f2fe', text: '#0284c7' };
+    case 'Music': return { background: '#fee2e2', text: '#ef4444' };
+    case 'Community': return { background: '#dcfce7', text: '#16a34a' };
+    case 'Business': return { background: '#fef3c7', text: '#f59e0b' };
+    case 'Art': return { background: '#f3e8ff', text: '#a855f7' };
     default: return { background: '#f3f4f6', text: '#4b5563' };
   }
 };
 
 const EventCard = ({ event }: any) => {
   const colors = getCategoryColor(event.category);
-  const router = useRouter(); // 👈 initialize the router
+  const router = useRouter();
 
   const handleViewDetails = () => {
-    // 👇 navigate to event details page
+
     router.push({
-      pathname: '/event/[id]',
+      pathname: '../(tabs)/event/[id]',
       params: { id: event.id },
     });
   };
@@ -29,7 +28,7 @@ const EventCard = ({ event }: any) => {
 
   return (
     <View style={styles.card}>
-      <Image 
+      <Image
         source={imageSource}
         style={styles.image}
         onError={(e) => console.log('Image failed to load:', e.nativeEvent.error)}
@@ -48,7 +47,7 @@ const EventCard = ({ event }: any) => {
 
         <View style={styles.detailsContainer}>
           <View style={styles.detailRow}>
-            <Text style={styles.icon}>{"\u{1F4C5}"}</Text> 
+            <Text style={styles.icon}>{"\u{1F4C5}"}</Text>
             <Text style={styles.detailText}>{event.date}</Text>
           </View>
 
@@ -56,21 +55,19 @@ const EventCard = ({ event }: any) => {
             <Text style={styles.icon}>{"\u{23F0}"}</Text>
             <Text style={styles.detailText}>{event.time}</Text>
           </View>
-          
+
           <View style={styles.detailRow}>
             <Text style={styles.icon}>{"\u{1F4CD}"}</Text>
             <Text style={styles.detailText} numberOfLines={1}>{event.location}</Text>
           </View>
         </View>
 
-        {/* 👇 View Details button that navigates to /event/[id] */}
-        <TouchableOpacity
+        <Pressable
           style={styles.button}
           onPress={handleViewDetails}
-          activeOpacity={0.7}
         >
           <Text style={styles.buttonText}>View Details</Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );
@@ -78,8 +75,8 @@ const EventCard = ({ event }: any) => {
 
 const styles = StyleSheet.create({
   card: {
-    width: '100%', 
-    marginBottom: 16, 
+    width: '100%',
+    marginBottom: 16,
     backgroundColor: '#ffffff',
     borderRadius: 16,
     shadowColor: '#000',
@@ -87,12 +84,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 6,
     elevation: 8,
-    overflow: 'hidden', 
+    overflow: 'hidden',
   },
   image: {
-    height: 160, 
-    width: '100%', 
-    resizeMode: 'cover', 
+    height: 160,
+    width: '100%',
+    resizeMode: 'cover',
   },
   contentContainer: {
     padding: 16,

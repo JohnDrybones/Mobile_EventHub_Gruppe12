@@ -1,9 +1,8 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
-// Import the card component
-import EventCard from './../../components/Eventcard';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import EventCard from '../../components/EventCard';
 
-// --- Mock Data (Moved here for easy access in the screen) ---
 const mockEvents = [
   { id: 1, title: "Tech Innovators Summit: Future of AI", date: "Oct 25, 2025", time: "10:00 AM", location: "Convention Center Hall A, 123 Tech Blvd", category: "Technology", imageUrl: "https://picsum.photos/id/1015/600/400" },
   { id: 2, title: "Jazz Night Live with the Blue Tones", date: "Nov 01, 2025", time: "7:30 PM", location: "The Blue Note Club, Downtown", category: "Music", imageUrl: "https://picsum.photos/id/1025/600/400" },
@@ -12,55 +11,51 @@ const mockEvents = [
   { id: 5, title: "Winter Art Exhibition: Modern Sculptures", date: "Dec 05, 2025", time: "6:00 PM", location: "City Art Gallery, Main Exhibition Room", category: "Art", imageUrl: "https://picsum.photos/id/1060/600/400" },
 ];
 
-export default function EventsScreen() { 
+export default function EventsScreen() {
   return (
-    // Change the root View to a ScrollView to enable vertical scrolling for the whole page content
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContent}>
-      
-      {/* Header Section */}
-      <View style={styles.header}>
-        <Text style={styles.appTitle}>EventHub</Text>
-        <Text style={styles.subtitle}>Explore upcoming events near you</Text>
-      </View>
+    <SafeAreaView style={styles.safeContainer}>
+      <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContent}>
 
-      {/* Events List Section (Now vertically oriented and full width) */}
-      <View style={styles.sectionContainer}>
-        <Text style={styles.sectionTitle}>Upcoming Events</Text>
-        
-        {/*
-          Removed the inner horizontal ScrollView. 
-          The cards are now mapped directly, creating a vertical list.
-          The EventCard component should now be full-width (see EventCard.js update below).
-        */}
-        <View style={styles.verticalList}>
-          {mockEvents.map((event) => (
-            // The card will use the available horizontal space (most of the page)
-            <EventCard 
-              key={event.id} 
-              event={event} 
-            />
-          ))}
+        <View style={styles.header}>
+          <Text style={styles.appTitle}>EventHub</Text>
+          <Text style={styles.subtitle}>Explore upcoming events near you</Text>
         </View>
-      </View>
 
-      {/* Placeholder for other content */}
-      <View style={styles.placeholderContainer}>
-        <Text style={styles.placeholderText}>Your other screen content goes here...</Text>
-      </View>
 
-    </ScrollView>
+        <View style={styles.sectionContainer}>
+          <Text style={styles.sectionTitle}>Upcoming Events</Text>
+          <View style={styles.verticalList}>
+            {mockEvents.map((event) => (
+              <EventCard
+                key={event.id}
+                event={event}
+              />
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.placeholderContainer}>
+          <Text style={styles.placeholderText}>Your other screen content goes here...</Text>
+        </View>
+
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    // We use padding on the ScrollView itself, so flex: 1 is needed on ScrollView
-    flex: 1, 
-    backgroundColor: '#f9fafb', // light gray background
+
+    flex: 1,
+    backgroundColor: '#f9fafb',
+  },
+  safeContainer: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
   },
   scrollViewContent: {
-    paddingTop: 40, // Space for status bar on iOS/Android
-    paddingBottom: 20, // Padding at the bottom of the scrollable area
+    paddingTop: 40,
+    paddingBottom: 20,
   },
   header: {
     paddingHorizontal: 20,
@@ -77,7 +72,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   sectionContainer: {
-    // Container for the list, no need for large margins here
+
   },
   sectionTitle: {
     fontSize: 22,
@@ -87,12 +82,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   verticalList: {
-    // Adds small horizontal padding/margin around the cards
-    paddingHorizontal: 12, 
+
+    paddingHorizontal: 12,
   },
   placeholderContainer: {
-    // Using marginTop instead of margin for better vertical flow
-    marginTop: 20, 
+
+    marginTop: 20,
     marginHorizontal: 20,
     padding: 20,
     justifyContent: 'center',

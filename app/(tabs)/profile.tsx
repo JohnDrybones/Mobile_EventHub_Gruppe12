@@ -1,12 +1,12 @@
 import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
 import {
-    Image,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -63,12 +63,12 @@ export default function ProfileScreen() {
             style={styles.optionItem}
             onPress={() => handlePress('Settings')}
           >
-            
+
             <MaterialIcons name="settings" size={24} color="#4285F4" />
             <Text style={styles.optionText}>Settings</Text>
           </TouchableOpacity>
 
-          
+
           <TouchableOpacity
             style={styles.optionItem}
             onPress={() => handlePress('Help & Feedback')}
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     color: '#777',
     marginBottom: 15,
   },
-  
+
   infoFieldsContainer: {
     width: '80%',
     borderTopWidth: 1,

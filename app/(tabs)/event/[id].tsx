@@ -1,5 +1,8 @@
-import { useLocalSearchParams } from "expo-router";
-import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { router, useLocalSearchParams } from "expo-router";
+import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, } from "react-native";
+import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 const mockEvents = [
   { id: 1, title: "Tech Innovators Summit: Future of AI", date: "Oct 25, 2025", time: "10:00 AM", location: "Convention Center Hall A, 123 Tech Blvd", category: "Technology", imageUrl: "https://picsum.photos/id/1015/600/400" },
@@ -8,6 +11,7 @@ const mockEvents = [
   { id: 4, title: "Startup Pitch Competition Q4 Finals", date: "Nov 15, 2025", time: "2:00 PM", location: "Innovation Hub, East Side Tower", category: "Business", imageUrl: "https://picsum.photos/id/1043/600/400" },
   { id: 5, title: "Winter Art Exhibition: Modern Sculptures", date: "Dec 05, 2025", time: "6:00 PM", location: "City Art Gallery, Main Exhibition Room", category: "Art", imageUrl: "https://picsum.photos/id/1060/600/400" },
 ];
+
 
 export default function EventDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -22,10 +26,18 @@ export default function EventDetailScreen() {
   }
 
   return (
+        <SafeAreaView style={styles.safeContainer}>
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
+            <MaterialIcons name="arrow-back" size={26} color="#111827" />
+            <Text style={styles.headerTitle}>Back</Text>
+          </TouchableOpacity>
+        </View>
+
         <Image source={{ uri: event.imageUrl }} style={styles.image} />
-        
+
         <View style={styles.detailsBox}>
           <Text style={styles.title}>{event.title}</Text>
 
@@ -45,6 +57,7 @@ export default function EventDetailScreen() {
         </View>
       </ScrollView>
     </View>
+    </SafeAreaView>
   );
 }
 
@@ -55,10 +68,30 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffffff",
   },
+   safeContainer: {
+    flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  backButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 6,
+  },
+  headerTitle: {
+    fontSize: 18,
+    fontWeight: "600",
+    color: "#111827",
+    marginLeft: 8,
+  },
   scrollContent: {
     minHeight: screenHeight,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     padding: 20,
     backgroundColor: "#ffffff",
   },
