@@ -3,10 +3,12 @@ import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const [loggedIn, setLoggedIn] = useState(false);
+
   return (
     <Tabs
       screenOptions={{
@@ -30,12 +32,20 @@ export default function TabLayout() {
         }}
       />
 
-      {/* 👇 This keeps /event routes in the app but hides them from the tab bar */}
       <Tabs.Screen
         name="event"
         options={{
-          href: null, // hides this tab from the bottom bar
-          headerShown: false, // 👈 enable headers for this route group
+          href: null,
+          headerShown: false,
+        }}
+      />
+
+      <Tabs.Screen
+        name="myevents"
+        options={{
+          title: 'My Events',
+          tabBarIcon: ({ color }) => <MaterialIcons size={28} name="event" color={color} />,
+          href: loggedIn ? undefined : null,
         }}
       />
 
@@ -44,13 +54,16 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="person" color={color} />,
+          href: loggedIn ? undefined : null,
         }}
       />
+
       <Tabs.Screen
         name="sign-in"
         options={{
           title: 'Logg inn',
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="login" color={color} />,
+          href: loggedIn ? null : undefined, 
         }}
       />
     </Tabs>
