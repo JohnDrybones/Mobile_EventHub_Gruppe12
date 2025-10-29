@@ -1,6 +1,7 @@
 import { APPWRITE_KEYS } from "@/constants/keys";
 import { Event } from "@/types";
-import { databases } from ".";
+import { Models, Query } from 'react-native-appwrite';
+import { account, databases } from ".";
 
 const { DATABASE_ID } =
 	APPWRITE_KEYS;
@@ -51,5 +52,52 @@ export const fetchEventById = async (eventId: string): Promise<Event> => {
   } catch (error) {
     console.error('Error fetching event by ID:', error);
     throw new Error('Could not fetch the event');
+  }
+};
+
+
+
+export const getMyAttendedEvents = async (userId: string): Promise<Event[]> => {
+  try {
+
+    const userEvents = await databases.listDocuments(
+      DATABASE_ID || "DATABASE_ID",  
+      'userevent',
+      [Query.equal('userId', userId)]
+    );
+
+    const eventIds = userEvents.documents.map(ue => ue.eventId);
+
+    const eventsResponse = await databases.listDocuments(
+      DATABASE_ID || "DATABASE_ID",  
+      'Events',
+      [Query.equal('$id', eventIds)] 
+    );
+   
+    const events: Event[] = eventsResponse.documents.map((doc: Models.DefaultDocument) => ({
+      id: doc.$id,
+      title: doc.title as string,
+      category: doc.category as string,
+      imageUrl: doc.imageUrl as string,
+      description: doc.description as string,
+      date: doc.date as string,
+      time: doc.time as string,
+      location: doc.location as string,
+    }));
+
+    return events;
+  } catch (error) {
+    console.error('Error fetching attended events:', error);
+    return [];
+  }
+};
+
+export const getCurrentUserId = async () => {
+  try {
+    const user = await account.get();
+    return user.$id;
+  } catch (error) {
+    console.error('Error getting user:', error);
+    return null;
   }
 };

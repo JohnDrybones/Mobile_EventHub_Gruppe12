@@ -1,26 +1,38 @@
-import { fetchEvents } from '@/providers/appwrite/database';
+import { getCurrentUserId, getMyAttendedEvents } from '@/providers/appwrite/database';
 import { Event } from "@/types";
 import React, { useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EventCard from '../../components/EventCard';
 
 export default function MyEventsScreen() {
-  const [events, setEvents] = useState<Event[]>([]);
-  
-    useEffect(() => {
-      const loadEvents = async () => {
-        try {
-          const fetchedEvents = await fetchEvents();
-          setEvents(fetchedEvents);
-        } catch (err) {
-          const errorMessage = (err as { message?: string }).message || "An unknown error occurred.";
-  
-        }       
-      };
-  
-      loadEvents();
-    }, []);
+const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        setLoading(true);
+        const id = await getCurrentUserId();
+
+        if (!id) {
+          Alert.alert("Not Logged In", "Please log in to view your events.");
+          return;
+        }
+
+        const fetchedEvents = await getMyAttendedEvents(id);
+        setEvents(fetchedEvents);
+      } catch (err) {
+        const errorMessage = (err as Error).message || "Failed to load events.";
+        console.error("Error loading events:", err);
+        Alert.alert("Error", errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadEvents();
+  }, []); // Run once on mount
   return (
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContent}>
