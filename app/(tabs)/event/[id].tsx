@@ -65,8 +65,7 @@ export default function EventDetailScreen() {
             </View>
 
             <Text style={styles.description}>
-              This is where detailed info about the event would go.
-              You can add things like schedule, price, or host details.
+              {event.description}
             </Text>
 
             <Button title="Join Event" onPress={() => alert("You joined the event!")} />
