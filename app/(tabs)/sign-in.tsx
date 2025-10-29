@@ -12,7 +12,7 @@ export default function SignInScreen() {
     try {
       await login(email, password);
       console.log("Logged in successfully!");
-      router.push({
+      router.navigate({
       pathname: '/profile',
       });
       } catch (error) {

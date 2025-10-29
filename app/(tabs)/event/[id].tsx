@@ -1,33 +1,38 @@
 import { fetchEventById } from "@/providers/appwrite/database";
 import { Event } from "@/types";
 import { MaterialIcons } from "@expo/vector-icons";
-import { router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams, usePathname } from "expo-router";
 import { useEffect, useState } from "react";
-import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View, } from "react-native";
+import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EventDetailScreen() {
   const { id } = useLocalSearchParams();
+  const pathname = usePathname();
   const eventId = id.toLocaleString();
   const [event, setEvent] = useState<Event | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+
+  const goBackToCorrectTab = () => {
+    if (pathname.startsWith('/myevents/')) {
+      router.replace('/myevents');
+    } else if (pathname.startsWith('/events/')) {
+      router.replace('/events');
+    } else {
+      router.replace('/');
+    }
+  };
 
   useEffect(() => {
     const loadEvent = async () => {
-      setLoading(true);
       try {
         const fetchedEvent = await fetchEventById(eventId);
         setEvent(fetchedEvent);
-        } catch (err) {
+      } catch (err) {
         const errorMessage = (err as { message?: string }).message || "An unknown error occurred."
-      }      
+      }
     };
-
     loadEvent();
-    setLoading(false);
   }, [id]);
-
-  if (loading) return <Text>Loading event details...</Text>;
 
   if (!event) {
     return (
@@ -38,37 +43,36 @@ export default function EventDetailScreen() {
   }
 
   return (
-        <SafeAreaView style={styles.safeContainer}>
-    <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-            <MaterialIcons name="arrow-back" size={26} color="#111827" />
-            <Text style={styles.headerTitle}>Back</Text>
-          </TouchableOpacity>
-        </View>
-
-        <Image source={{ uri: event.imageUrl }} style={styles.image} />
-
-        <View style={styles.detailsBox}>
-          <Text style={styles.title}>{event.title}</Text>
-
-          <View style={styles.infoGroup}>
-            <Text style={styles.detailItem}>📅 {event.date}</Text>
-            <Text style={styles.detailItem}>⏰ {event.time}</Text>
-            <Text style={styles.detailItem}>📍 {event.location}</Text>
-            <Text style={styles.detailItem}>🏷️ {event.category}</Text>
+    <SafeAreaView style={styles.safeContainer}>
+      <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={goBackToCorrectTab} style={styles.backButton}>
+              <MaterialIcons name="arrow-back" size={26} color="#111827" />
+              <Text style={styles.headerTitle}>Back</Text>
+            </TouchableOpacity>
           </View>
 
-          <Text style={styles.description}>
-            This is where detailed info about the event would go.
-            You can add things like schedule, price, or host details.
-          </Text>
+          <Image source={{ uri: event.imageUrl }} style={styles.image} />
+          <View style={styles.detailsBox}>
+            <Text style={styles.title}>{event.title}</Text>
 
-          <Button title="Join Event" onPress={() => alert("You joined the event!")} />
-        </View>
-      </ScrollView>
-    </View>
+            <View style={styles.infoGroup}>
+              <Text style={styles.detailItem}>📅 {event.date}</Text>
+              <Text style={styles.detailItem}>⏰ {event.time}</Text>
+              <Text style={styles.detailItem}>📍 {event.location}</Text>
+              <Text style={styles.detailItem}>🏷️ {event.category}</Text>
+            </View>
+
+            <Text style={styles.description}>
+              This is where detailed info about the event would go.
+              You can add things like schedule, price, or host details.
+            </Text>
+
+            <Button title="Join Event" onPress={() => alert("You joined the event!")} />
+          </View>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -80,7 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#ffffff",
   },
-   safeContainer: {
+  safeContainer: {
     flex: 1,
     backgroundColor: '#f5f5f5',
   },

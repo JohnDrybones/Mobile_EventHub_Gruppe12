@@ -18,7 +18,7 @@ const EventCard = ({ event }: { event: EventType }) => {
   const router = useRouter();
 
   const handleViewDetails = () => {
-    router.push({
+    router.navigate({
       pathname: '../(tabs)/event/[id]',
       params: { id: event.id },
     });

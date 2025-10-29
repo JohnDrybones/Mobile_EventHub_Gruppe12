@@ -20,7 +20,7 @@ export default function ProfileScreen() {
     try {
       await logout();
       console.log("Logged out successfully!");
-      router.push({
+      router.navigate({
       pathname: '/sign-in',
       });
     } catch (error) {
