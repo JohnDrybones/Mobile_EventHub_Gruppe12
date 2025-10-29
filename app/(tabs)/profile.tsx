@@ -2,7 +2,7 @@ import { useLoggedIn } from '@/context/AuthProvider';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Account, Client } from "appwrite";
 import { router } from 'expo-router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Alert,
   Image,
@@ -19,10 +19,12 @@ export default function ProfileScreen() {
 
   const endPoint = process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT || 'defaultEndpoint';
   const project = process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID || 'defaultProject';
+  const devKey = process.env.EXPO_PUBLIC_APPWRITE_DEV_KEY || 'defaultKey';
 
   const client = new Client()
     .setEndpoint(endPoint)
-    .setProject(project);
+    .setProject(project)
+    .setDevKey(devKey);
 
   const account = new Account(client);
 
@@ -30,12 +32,29 @@ export default function ProfileScreen() {
     console.log(`Action: ${title}`);
   };
 
+  const checkSession = async () => {
+        try {
+            const session = await account.getSession('current'); 
+            console.log(session);
+            setLoggedIn(true); 
+        } catch (error) {
+            console.error('No active session:', error);
+            setLoggedIn(false);
+            router.push({
+            pathname: '/sign-in',
+    });
+        }
+    };
+  
+    useEffect(() => {
+        checkSession(); 
+    }, []);
+
   const logout = async () => {
     try {
       await account.deleteSession("current"); 
-      setLoggedIn(false); 
       Alert.alert('Logged out', 'You have been logged out successfully.');
-      setLoggedIn(true);
+      setLoggedIn(false);
       router.push({
         pathname: '/sign-in',
       });

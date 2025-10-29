@@ -10,10 +10,13 @@ export default function SignInScreen() {
   const { loggedIn, setLoggedIn } = useLoggedIn();
   const endPoint = process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT || 'defaultEndpoint';
   const project = process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID || 'defaultProject';
+  const devKey = process.env.EXPO_PUBLIC_APPWRITE_DEV_KEY || 'defaultKey'
+
 
   const client = new Client()
       .setEndpoint(endPoint) 
-      .setProject(project); 
+      .setProject(project)
+      .setDevKey(devKey);
 
   const account = new Account(client);
   const checkSession = async () => {
