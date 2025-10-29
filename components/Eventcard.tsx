@@ -1,3 +1,4 @@
+import { Event as EventType } from '@/types';
 import { useRouter } from 'expo-router';
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -12,12 +13,11 @@ const getCategoryColor = (category: string) => {
   }
 };
 
-const EventCard = ({ event }: any) => {
+const EventCard = ({ event }: { event: EventType }) => {
   const colors = getCategoryColor(event.category);
   const router = useRouter();
 
   const handleViewDetails = () => {
-
     router.push({
       pathname: '../(tabs)/event/[id]',
       params: { id: event.id },

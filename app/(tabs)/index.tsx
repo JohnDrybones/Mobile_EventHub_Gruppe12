@@ -1,19 +1,30 @@
-import React from 'react';
+import { fetchEvents } from '@/providers/appwrite/database';
+import { Event } from "@/types";
+import React, { useEffect, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EventCard from '../../components/EventCard';
-
-const mockEvents = [
-  { id: 1, title: "Tech Innovators Summit: Future of AI", date: "Oct 25, 2025", time: "10:00 AM", location: "Convention Center Hall A, 123 Tech Blvd", category: "Technology", imageUrl: "https://picsum.photos/id/1015/600/400" },
-  { id: 2, title: "Jazz Night Live with the Blue Tones", date: "Nov 01, 2025", time: "7:30 PM", location: "The Blue Note Club, Downtown", category: "Music", imageUrl: "https://picsum.photos/id/1025/600/400" },
-  { id: 3, title: "Local Farmers Market & Harvest Festival", date: "Oct 26, 2025", time: "9:00 AM", location: "Downtown Square, Central Park Area", category: "Community", imageUrl: "https://picsum.photos/id/1080/600/400" },
-];
-
 
 const screenWidth = Dimensions.get('window').width;
 const isWideScreen = screenWidth > 768;
 
 export default function HomeScreen() {
+  const [events, setEvents] = useState<Event[]>([]);
+
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        const fetchedEvents = await fetchEvents();
+        setEvents(fetchedEvents);
+      } catch (err) {
+        const errorMessage = (err as { message?: string }).message || "An unknown error occurred.";
+
+      }       
+    };
+
+    loadEvents();
+  }, []);
+
   const listStyle = isWideScreen ? styles.horizontalList : styles.verticalList;
 
   return (
@@ -30,7 +41,7 @@ export default function HomeScreen() {
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Populære Events</Text>
           <View style={listStyle}>
-            {mockEvents.slice(0, 3).map((event) => (
+            {events.slice(0, 10).map((event) => (
               <View key={event.id} style={isWideScreen ? styles.cardContainerWide : styles.cardContainerNarrow}>
                 <EventCard event={event} />
               </View>

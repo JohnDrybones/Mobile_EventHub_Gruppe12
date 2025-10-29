@@ -71,8 +71,6 @@ export default function AuthProvider({
     setLoadings();
     const result = await loginAndGetUser(email, password);
     setUser(result.success ? result.data : null);
-    console.log("result: ", result);
-    console.log("user: ", user);
     resetLoading();
   };
 
