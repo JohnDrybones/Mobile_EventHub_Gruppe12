@@ -1,14 +1,13 @@
 import { HapticTab } from '@/components/haptic-tab';
 import { Colors } from '@/constants/theme';
-import { useLoggedIn } from '@/context/AuthProvider';
+import { useAuth } from '@/context/AuthProvider';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { MaterialIcons } from '@expo/vector-icons';
 import { Tabs } from 'expo-router';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const { loggedIn } = useLoggedIn();
-  
+  const { isLoggedIn } = useAuth();
   return (
     <Tabs
       screenOptions={{
@@ -46,7 +45,7 @@ export default function TabLayout() {
         options={{
           title: 'My Events',
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="event" color={color} />,
-          href: loggedIn ? undefined : null, 
+          href: isLoggedIn ? undefined : null, 
         }}
       />
 
@@ -55,7 +54,7 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="person" color={color} />,
-          href: loggedIn ? undefined : null, 
+          href: isLoggedIn ? undefined : null, 
         }}
       />
 
@@ -64,7 +63,7 @@ export default function TabLayout() {
         options={{
           title: 'Logg inn',
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="login" color={color} />,
-          href: loggedIn ? null : undefined, 
+          href: isLoggedIn ? null : undefined, 
         }}
       />
     </Tabs>

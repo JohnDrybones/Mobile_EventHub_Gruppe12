@@ -1,10 +1,8 @@
-import { useLoggedIn } from '@/context/AuthProvider';
+import { useAuth } from "@/context/AuthProvider";
 import { MaterialIcons } from '@expo/vector-icons';
-import { Account, Client } from "appwrite";
-import { router } from 'expo-router';
-import React, { useEffect } from 'react';
+import { router } from "expo-router";
+import React from 'react';
 import {
-  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -15,53 +13,22 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
-  const { loggedIn, setLoggedIn } = useLoggedIn();
 
-  const endPoint = process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT || 'defaultEndpoint';
-  const project = process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID || 'defaultProject';
-  const devKey = process.env.EXPO_PUBLIC_APPWRITE_DEV_KEY || 'defaultKey';
+  const { user, logout } = useAuth();
 
-  const client = new Client()
-    .setEndpoint(endPoint)
-    .setProject(project)
-    .setDevKey(devKey);
-
-  const account = new Account(client);
-
-  const handlePress = (title: string) => {
-    console.log(`Action: ${title}`);
-  };
-
-  const checkSession = async () => {
-        try {
-            const session = await account.getSession('current'); 
-            console.log(session);
-            setLoggedIn(true); 
-        } catch (error) {
-            console.error('No active session:', error);
-            setLoggedIn(false);
-            router.push({
-            pathname: '/sign-in',
-    });
-        }
-    };
-  
-    useEffect(() => {
-        checkSession(); 
-    }, []);
-
-  const logout = async () => {
+  const handleLogout = async () => {
     try {
-      await account.deleteSession("current"); 
-      Alert.alert('Logged out', 'You have been logged out successfully.');
-      setLoggedIn(false);
+      await logout();
+      console.log("Logged out successfully!");
       router.push({
-        pathname: '/sign-in',
+      pathname: '/sign-in',
       });
     } catch (error) {
-      console.error('Error logging out:', error);
-      Alert.alert('Error', 'Failed to log out. Please try again.');
+      console.error("Logout error:", error);
     }
+  };
+  const handlePress = (title: string) => {
+    console.log(`Action: ${title}`);
   };
 
   return (
@@ -129,7 +96,7 @@ export default function ProfileScreen() {
 
           <TouchableOpacity
             style={styles.optionItem}
-            onPress={() => logout()}
+            onPress={() => handleLogout()}
           >
             <MaterialIcons name="logout" size={24} color="#4285F4" />
             <Text style={styles.optionText}>Sign Out</Text>

@@ -1,151 +1,116 @@
-import { useLoggedIn } from '@/context/AuthProvider';
-import { Account, Client } from "appwrite";
-import { router } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useAuth } from "@/context/AuthProvider";
+import { router } from "expo-router";
+import { useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function SignInScreen() {
+  const { login, isLoggedIn } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { loggedIn, setLoggedIn } = useLoggedIn();
-  const endPoint = process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT || 'defaultEndpoint';
-  const project = process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID || 'defaultProject';
-  const devKey = process.env.EXPO_PUBLIC_APPWRITE_DEV_KEY || 'defaultKey'
 
-
-  const client = new Client()
-      .setEndpoint(endPoint) 
-      .setProject(project)
-      .setDevKey(devKey);
-
-  const account = new Account(client);
-  const checkSession = async () => {
-      try {
-          const session = await account.getSession('current'); 
-          console.log(session);
-          setLoggedIn(true); 
+  const handleSignIn = async () => {
+    try {
+      await login(email, password);
+      console.log("Logged in successfully!");
+      router.push({
+      pathname: '/profile',
+      });
       } catch (error) {
-          console.error('No active session:', error);
-          setLoggedIn(false); 
+        console.error("Login error:", error);
       }
-  };
+    };
 
-  useEffect(() => {
-      checkSession(); 
-  }, []);
+    return (
+      <View style={styles.container}>
+        <Text style={styles.title}>Logg inn</Text>
+        <Text style={styles.subtitle}>Velkommen tilbake!</Text>
 
-  const signIn = async (email: string, password: string) => {
-      try {
-          const result = await account.createEmailPasswordSession({
-              email: email,
-              password: password
-          });
-          console.log(result);
-          setLoggedIn(true);
-           router.push({
-            pathname: '/profile',
-    });
-      } catch (error) {
-          console.error('Error creating session:', error);
-          Alert.alert('Error', 'Failed to log in. Please check your email and password.');
-      }
-  };
+        <TextInput
+          style={styles.input}
+          placeholder="E-post"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
 
-  const handleSignIn = () => {
-      signIn(email, password); 
-  };
+        <TextInput
+          style={styles.input}
+          placeholder="Passord"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+        />
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Logg inn</Text>
-      <Text style={styles.subtitle}>Velkommen tilbake!</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="E-post"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-
-      <TextInput
-        style={styles.input}
-        placeholder="Passord"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
-
-      <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-        <Text style={styles.buttonText}>Logg inn</Text>
-      </TouchableOpacity>
-
-      <View style={styles.footer}>
-        <Text style={styles.footerText}>Har du ikke en konto? </Text>
-        <TouchableOpacity onPress={() => Alert.alert('Kommer senere', 'Registreringsside er ikke laget ennå.')}>
-          <Text style={styles.link}>Registrer deg</Text>
+        <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+          <Text style={styles.buttonText}>Logg inn</Text>
         </TouchableOpacity>
-      </View>
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 24,
-    backgroundColor: '#f9fafb',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    textAlign: 'center',
-    color: '#1f2937',
-  },
-  subtitle: {
-    fontSize: 16,
-    color: '#6b7280',
-    textAlign: 'center',
-    marginBottom: 32,
-  },
-  input: {
-    height: 50,
-    borderColor: '#d1d5db',
-    borderWidth: 1,
-    marginBottom: 16,
-    padding: 15,
-    borderRadius: 8,
-    backgroundColor: '#fff',
-    fontSize: 16,
-    color: 'black',
-  },
-  button: {
-    backgroundColor: '#4f46e5',
-    paddingVertical: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 8,
-  },
-  buttonText: {
-    color: '#ffffff',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 24,
-  },
-  footerText: {
-    fontSize: 14,
-    color: '#6b7280',
-  },
-  link: {
-    fontSize: 14,
-    color: '#4f46e5',
-    fontWeight: '600',
-  },
-});
+        <View style={styles.footer}>
+          <Text style={styles.footerText}>Har du ikke en konto? </Text>
+          <TouchableOpacity onPress={() => Alert.alert('Kommer senere', 'Registreringsside er ikke laget ennå.')}>
+            <Text style={styles.link}>Registrer deg</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      padding: 24,
+      backgroundColor: '#f9fafb',
+    },
+    title: {
+      fontSize: 32,
+      fontWeight: 'bold',
+      marginBottom: 8,
+      textAlign: 'center',
+      color: '#1f2937',
+    },
+    subtitle: {
+      fontSize: 16,
+      color: '#6b7280',
+      textAlign: 'center',
+      marginBottom: 32,
+    },
+    input: {
+      height: 50,
+      borderColor: '#d1d5db',
+      borderWidth: 1,
+      marginBottom: 16,
+      padding: 15,
+      borderRadius: 8,
+      backgroundColor: '#fff',
+      fontSize: 16,
+      color: 'black',
+    },
+    button: {
+      backgroundColor: '#4f46e5',
+      paddingVertical: 15,
+      borderRadius: 8,
+      alignItems: 'center',
+      marginTop: 8,
+    },
+    buttonText: {
+      color: '#ffffff',
+      fontSize: 16,
+      fontWeight: '600',
+    },
+    footer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      marginTop: 24,
+    },
+    footerText: {
+      fontSize: 14,
+      color: '#6b7280',
+    },
+    link: {
+      fontSize: 14,
+      color: '#4f46e5',
+      fontWeight: '600',
+    },
+  });
