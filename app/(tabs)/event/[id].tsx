@@ -1,4 +1,4 @@
-import { fetchEvents } from "@/providers/appwrite/database";
+import { fetchEventById } from "@/providers/appwrite/database";
 import { Event } from "@/types";
 import { MaterialIcons } from "@expo/vector-icons";
 import { router, useLocalSearchParams } from "expo-router";
@@ -8,21 +8,26 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EventDetailScreen() {
   const { id } = useLocalSearchParams();
-  const [events, setEvents] = useState<Event[]>([]);
-  const event = events.find(e => e.id.toString() === id);
+  const eventId = id.toLocaleString();
+  const [event, setEvent] = useState<Event | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const loadEvents = async () => {
+    const loadEvent = async () => {
+      setLoading(true);
       try {
-        const fetchedEvents = await fetchEvents();
-        setEvents(fetchedEvents);
-      } catch (err) {
-        const errorMessage = (err as { message?: string }).message || "An unknown error occurred.";
-      }       
+        const fetchedEvent = await fetchEventById(eventId);
+        setEvent(fetchedEvent);
+        } catch (err) {
+        const errorMessage = (err as { message?: string }).message || "An unknown error occurred."
+      }      
     };
 
-    loadEvents();   
-  }, []);
+    loadEvent();
+    setLoading(false);
+  }, [id]);
+
+  if (loading) return <Text>Loading event details...</Text>;
 
   if (!event) {
     return (

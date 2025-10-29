@@ -26,3 +26,28 @@ export const fetchEvents = async (): Promise<Event[]> => {
     throw new Error('Could not fetch events');
   }
 };
+
+export const fetchEventById = async (eventId: string): Promise<Event> => {
+  try {
+    const response = await databases.getDocument(
+      DATABASE_ID || "DATABASE_ID",  
+      'events',
+       eventId          
+    );
+
+    const event: Event = {
+      id: response.$id,       
+      title: response.title,
+      category: response.category,
+      imageUrl: response.imageUrl,
+      date: response.date,
+      time: response.time,
+      location: response.location,
+    };
+
+    return event; 
+  } catch (error) {
+    console.error('Error fetching event by ID:', error);
+    throw new Error('Could not fetch the event');
+  }
+};
