@@ -1,12 +1,55 @@
-import { useState } from 'react';
+import { useLoggedIn } from '@/context/AuthProvider';
+import { Account, Client } from "appwrite";
+import { router } from 'expo-router';
+import { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 export default function SignInScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { loggedIn, setLoggedIn } = useLoggedIn();
+  const endPoint = process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT || 'defaultEndpoint';
+  const project = process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID || 'defaultProject';
+
+  const client = new Client()
+      .setEndpoint(endPoint) 
+      .setProject(project); 
+
+  const account = new Account(client);
+  const checkSession = async () => {
+      try {
+          const session = await account.getSession('current'); 
+          console.log(session);
+          setLoggedIn(true); 
+      } catch (error) {
+          console.error('No active session:', error);
+          setLoggedIn(false); 
+      }
+  };
+
+  useEffect(() => {
+      checkSession(); 
+  }, []);
+
+  const signIn = async (email: string, password: string) => {
+      try {
+          const result = await account.createEmailPasswordSession({
+              email: email,
+              password: password
+          });
+          console.log(result);
+          setLoggedIn(true);
+           router.push({
+            pathname: '/profile',
+    });
+      } catch (error) {
+          console.error('Error creating session:', error);
+          Alert.alert('Error', 'Failed to log in. Please check your email and password.');
+      }
+  };
 
   const handleSignIn = () => {
-    Alert.alert('Logger inn', `E-post: ${email}`);
+      signIn(email, password); 
   };
 
   return (
@@ -74,6 +117,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     backgroundColor: '#fff',
     fontSize: 16,
+    color: 'black',
   },
   button: {
     backgroundColor: '#4f46e5',

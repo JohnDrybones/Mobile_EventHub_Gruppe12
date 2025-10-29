@@ -1,6 +1,10 @@
+import { useLoggedIn } from '@/context/AuthProvider';
 import { MaterialIcons } from '@expo/vector-icons';
+import { Account, Client } from "appwrite";
+import { router } from 'expo-router';
 import React from 'react';
 import {
+  Alert,
   Image,
   ScrollView,
   StyleSheet,
@@ -11,8 +15,34 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
+  const { loggedIn, setLoggedIn } = useLoggedIn();
+
+  const endPoint = process.env.EXPO_PUBLIC_APPWRITE_ENDPOINT || 'defaultEndpoint';
+  const project = process.env.EXPO_PUBLIC_APPWRITE_PROJECT_ID || 'defaultProject';
+
+  const client = new Client()
+    .setEndpoint(endPoint)
+    .setProject(project);
+
+  const account = new Account(client);
+
   const handlePress = (title: string) => {
     console.log(`Action: ${title}`);
+  };
+
+  const logout = async () => {
+    try {
+      await account.deleteSession("current"); 
+      setLoggedIn(false); 
+      Alert.alert('Logged out', 'You have been logged out successfully.');
+      setLoggedIn(true);
+      router.push({
+        pathname: '/sign-in',
+      });
+    } catch (error) {
+      console.error('Error logging out:', error);
+      Alert.alert('Error', 'Failed to log out. Please try again.');
+    }
   };
 
   return (
@@ -80,7 +110,7 @@ export default function ProfileScreen() {
 
           <TouchableOpacity
             style={styles.optionItem}
-            onPress={() => handlePress('Sign Out')}
+            onPress={() => logout()}
           >
             <MaterialIcons name="logout" size={24} color="#4285F4" />
             <Text style={styles.optionText}>Sign Out</Text>
