@@ -1,5 +1,6 @@
-import React from 'react';
-import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { useLoggedIn } from '@/context/AuthProvider';
+import React, { useEffect } from 'react';
+import { Button, Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import EventCard from '../../components/EventCard';
 
@@ -14,6 +15,15 @@ const isWideScreen = screenWidth > 768;
 
 export default function HomeScreen() {
   const listStyle = isWideScreen ? styles.horizontalList : styles.verticalList;
+  const { loggedIn, setLoggedIn } = useLoggedIn();
+
+  useEffect(() => {
+    console.log('loggedIn changed:', loggedIn);
+  }, [loggedIn]);
+
+  const toggleLoggedIn = () => {
+    setLoggedIn(!loggedIn);
+  };
 
   return (
     <SafeAreaView style={styles.safeContainer}>
@@ -22,7 +32,13 @@ export default function HomeScreen() {
         <View style={styles.welcomeContainer}>
           <Text style={styles.title}>Velkommen til EventHub 🎉</Text>
           <Text style={styles.subtitle}>Oppdag og delta på lokale events</Text>
+          <Button
+            title={loggedIn ? "Log Out" : "Log In"}
+            onPress={toggleLoggedIn}
+          />
         </View>
+
+
 
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Populære Events</Text>

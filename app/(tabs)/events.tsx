@@ -12,24 +12,20 @@ const mockEvents = [
 ];
 
 export default function EventsScreen() {
+
   return (
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContent}>
-
         <View style={styles.header}>
           <Text style={styles.appTitle}>EventHub</Text>
           <Text style={styles.subtitle}>Explore upcoming events near you</Text>
         </View>
 
-
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Upcoming Events</Text>
           <View style={styles.verticalList}>
             {mockEvents.map((event) => (
-              <EventCard
-                key={event.id}
-                event={event}
-              />
+              <EventCard key={event.id} event={event} />
             ))}
           </View>
         </View>
@@ -37,66 +33,21 @@ export default function EventsScreen() {
         <View style={styles.placeholderContainer}>
           <Text style={styles.placeholderText}>Your other screen content goes here...</Text>
         </View>
-
       </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-
-    flex: 1,
-    backgroundColor: '#f9fafb',
-  },
-  safeContainer: {
-    flex: 1,
-    backgroundColor: '#f5f5f5',
-  },
-  scrollViewContent: {
-    paddingTop: 40,
-    paddingBottom: 20,
-  },
-  header: {
-    paddingHorizontal: 20,
-    marginBottom: 20,
-  },
-  appTitle: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#1f2937',
-  },
-  subtitle: {
-    fontSize: 18,
-    color: '#6b7280',
-    marginTop: 4,
-  },
-  sectionContainer: {
-
-  },
-  sectionTitle: {
-    fontSize: 22,
-    fontWeight: '600',
-    color: '#1f2937',
-    paddingHorizontal: 20,
-    marginBottom: 10,
-  },
-  verticalList: {
-
-    paddingHorizontal: 12,
-  },
-  placeholderContainer: {
-
-    marginTop: 20,
-    marginHorizontal: 20,
-    padding: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-  },
-  placeholderText: {
-    fontSize: 16,
-    color: '#9ca3af',
-  }
+  container: { flex: 1, backgroundColor: '#f9fafb' },
+  safeContainer: { flex: 1, backgroundColor: '#f5f5f5' },
+  scrollViewContent: { paddingTop: 40, paddingBottom: 20 },
+  header: { paddingHorizontal: 20, marginBottom: 20 },
+  appTitle: { fontSize: 32, fontWeight: 'bold', color: '#1f2937' },
+  subtitle: { fontSize: 18, color: '#6b7280', marginTop: 4 },
+  sectionContainer: {},
+  sectionTitle: { fontSize: 22, fontWeight: '600', color: '#1f2937', paddingHorizontal: 20, marginBottom: 10 },
+  verticalList: { paddingHorizontal: 12 },
+  placeholderContainer: { marginTop: 20, marginHorizontal: 20, padding: 20, justifyContent: 'center', alignItems: 'center', backgroundColor: '#ffffff', borderRadius: 16 },
+  placeholderText: { fontSize: 16, color: '#9ca3af' }
 });
