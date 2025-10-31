@@ -37,7 +37,6 @@ const { id } = useLocalSearchParams();
                   try {
                       const attendingFromDB = await isAttending(userId,eventId);
                       setAttending(attendingFromDB);
-                      console.log("Attending", attendingFromDB)
                   } catch (err) {
                       const errorMessage = (err as { message?: string }).message || "An unknown error occurred."
                   }

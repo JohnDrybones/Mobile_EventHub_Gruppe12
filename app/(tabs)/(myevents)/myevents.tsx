@@ -19,8 +19,6 @@ const [events, setEvents] = useState<Event[]>([]);
         }
   }, [user]);
 
-  
-
 useFocusEffect(
   useCallback(() => {
     async function fetchEvents() {
@@ -49,7 +47,7 @@ useFocusEffect(
       }
     }
 
-    fetchEvents(); // call the async function
+    fetchEvents(); 
   }, [user, isLoggedIn])
 );
 
