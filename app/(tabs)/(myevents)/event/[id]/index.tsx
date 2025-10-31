@@ -1,26 +1,14 @@
 import { fetchEventById } from "@/providers/appwrite/database";
 import { Event } from "@/types";
-import { MaterialIcons } from "@expo/vector-icons";
-import { router, useLocalSearchParams, usePathname } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
-import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EventDetailScreen() {
   const { id } = useLocalSearchParams();
-  const pathname = usePathname();
   const eventId = id.toLocaleString();
   const [event, setEvent] = useState<Event | null>(null);
-
-  const goBackToCorrectTab = () => {
-    if (pathname.startsWith('/myevents/')) {
-      router.replace('/myevents');
-    } else if (pathname.startsWith('/events/')) {
-      router.replace('/events');
-    } else {
-      router.replace('/');
-    }
-  };
 
   useEffect(() => {
     const loadEvent = async () => {
@@ -46,12 +34,6 @@ export default function EventDetailScreen() {
     <SafeAreaView style={styles.safeContainer}>
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          <View style={styles.header}>
-            <TouchableOpacity onPress={goBackToCorrectTab} style={styles.backButton}>
-              <MaterialIcons name="arrow-back" size={26} color="#111827" />
-              <Text style={styles.headerTitle}>Back</Text>
-            </TouchableOpacity>
-          </View>
 
           <Image source={{ uri: event.imageUrl }} style={styles.image} />
           <View style={styles.detailsBox}>

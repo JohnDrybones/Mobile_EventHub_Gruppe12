@@ -1,13 +1,13 @@
 import { Stack } from 'expo-router';
 
-export default function EventLayout() {
+export default function HomeEventsLayout() {
     return (
         <Stack>
             <Stack.Screen
-                name="[id]"
+                name="index"
                 options={{
                     title: 'Event Details',
-                    headerShown: false,
+                    headerShown: true,
                     headerBackTitle: 'Back',
                 }}
             />

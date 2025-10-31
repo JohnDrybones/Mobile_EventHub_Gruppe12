@@ -1,9 +1,9 @@
+import EventCard from '@/components/EventCard';
 import { getCurrentUserId, getMyAttendedEvents } from '@/providers/appwrite/database';
 import { Event } from "@/types";
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import EventCard from '../../components/EventCard';
 
 export default function MyEventsScreen() {
 const [events, setEvents] = useState<Event[]>([]);
@@ -14,10 +14,14 @@ const [events, setEvents] = useState<Event[]>([]);
       try {
         setLoading(true);
         const id = await getCurrentUserId();
-
+        
         if (!id) {
           Alert.alert("Not Logged In", "Please log in to view your events.");
           return;
+        }
+
+        if(id){
+          console.log(id);
         }
 
         const fetchedEvents = await getMyAttendedEvents(id);
@@ -29,9 +33,11 @@ const [events, setEvents] = useState<Event[]>([]);
       } finally {
         setLoading(false);
       }
+      
     };
 
     loadEvents();
+    
   }, []); // Run once on mount
   return (
     <SafeAreaView style={styles.safeContainer}>

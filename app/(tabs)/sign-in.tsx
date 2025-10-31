@@ -1,3 +1,4 @@
+import { useAuth } from "@/context/AuthProvider";
 import { router } from "expo-router";
 import { useState } from "react";
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -5,10 +6,10 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-nativ
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const { login, isLoggedIn } = useAuth();
   const handleSignIn = async () => {
     try {
-      // her kan du senere legge til login-logikk
+      await login(email, password);
       console.log("Logged in successfully!");
       router.replace("/profile");
     } catch (error) {
