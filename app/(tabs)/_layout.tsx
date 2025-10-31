@@ -8,6 +8,7 @@ import { Tabs } from 'expo-router';
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const { isLoggedIn } = useAuth();
+  console.log(isLoggedIn);
   return (
     <Tabs
       screenOptions={{
@@ -17,7 +18,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="(home)"
         options={{
           title: 'Home',
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="home" color={color} />,
@@ -25,7 +26,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="events"
+        name="(events)"
         options={{
           title: 'Events',
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="event" color={color} />,
@@ -33,15 +34,7 @@ export default function TabLayout() {
       />
 
       <Tabs.Screen
-        name="event"
-        options={{
-          href: null,
-          headerShown: false,
-        }}
-      />
-
-      <Tabs.Screen
-        name="myevents"
+        name="(myevents)"
         options={{
           title: 'My Events',
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="event" color={color} />,

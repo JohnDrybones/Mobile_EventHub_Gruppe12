@@ -14,7 +14,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
 
-  const { user, logout } = useAuth();
+  const { user, logout, isLoggedIn } = useAuth();
+
+  console.log(isLoggedIn);
 
   const handleLogout = async () => {
     try {
