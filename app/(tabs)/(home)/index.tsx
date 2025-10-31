@@ -1,9 +1,9 @@
+import EventCard from '@/components/Eventcard';
 import { fetchEvents } from '@/providers/appwrite/database';
 import { Event } from "@/types";
 import React, { useEffect, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import EventCard from '../../../components/EventCard';
 
 const screenWidth = Dimensions.get('window').width;
 const isWideScreen = screenWidth > 768;

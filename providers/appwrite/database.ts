@@ -73,7 +73,59 @@ export const hasUserEvents = async (userId: string): Promise<boolean> => {
   }
 }
 
+export const attendEvent = async (userId: string, eventId: string): Promise<boolean> => {
+  if (!userId || !eventId) return false;
 
+  try {
+    const response = await databases.createDocument(
+      DATABASE_ID || "DATABASE_ID",
+      "userevent",
+      "unique()",
+      {
+        eventId: eventId,
+        userId: userId
+      }
+    );
+
+    return !!response.$id; 
+  } catch (error) {
+    console.error("Error attending event:", error);
+    return false;
+  }
+};
+
+export const unAttendEvent = async (userId: string, eventId: string): Promise<boolean> => {
+  if (!userId || !eventId) return false;
+
+  try {
+    const result = await databases.listDocuments(
+      DATABASE_ID || "DATABASE_ID",
+      "userevent",
+      [
+        Query.equal("userId", userId),
+        Query.equal("eventId", eventId),
+      ]
+    );
+
+    if (result.total === 0) {
+      console.log("No matching attendance record found.");
+      return false;
+    }
+
+    const docId = result.documents[0].$id; 
+
+    await databases.deleteDocument(
+      DATABASE_ID || "DATABASE_ID",
+      "userevent",
+      docId
+    );
+
+    return true;
+  } catch (error) {
+    console.error(" Error unattending event:", error);
+    return false;
+  }
+};
 
 export const getMyAttendedEvents = async (userId: string): Promise<Event[]> => {
   try {
