@@ -1,7 +1,7 @@
 import { APPWRITE_KEYS } from "@/constants/keys";
 import { Event } from "@/types";
 import { Models, Query } from 'react-native-appwrite';
-import { account, databases } from ".";
+import { databases } from ".";
 
 const { DATABASE_ID } =
 	APPWRITE_KEYS;
@@ -73,10 +73,48 @@ export const hasUserEvents = async (userId: string): Promise<boolean> => {
   }
 }
 
+export const isAttending = async (userId: string, eventId: string): Promise<boolean> => {
+  if (!userId || !eventId) return false;
+
+  try {
+    const entryExists = await databases.listDocuments(
+      DATABASE_ID || "DATABASE_ID",
+      'userevent',
+      [
+        Query.equal('userId', userId),
+        Query.equal('eventId', eventId)
+      ],
+    );
+    
+    if(entryExists.documents.length === 0){
+      console.log("FAILED");
+      return false;
+    }
+
+    return true;
+  } catch (error) {
+    console.error("Error checking user events:", error);
+    return false;
+  }
+}
+
 export const attendEvent = async (userId: string, eventId: string): Promise<boolean> => {
   if (!userId || !eventId) return false;
 
   try {
+    const entryExists = await databases.listDocuments(
+      DATABASE_ID || "DATABASE_ID",
+      'userevent',
+      [
+        Query.equal("userId", userId) 
+      ],
+    );
+    
+    if(entryExists.documents.length === 0){
+      console.log("FAILED");
+      return false;
+    }
+
     const response = await databases.createDocument(
       DATABASE_ID || "DATABASE_ID",
       "userevent",
@@ -86,7 +124,6 @@ export const attendEvent = async (userId: string, eventId: string): Promise<bool
         userId: userId
       }
     );
-
     return !!response.$id; 
   } catch (error) {
     console.error("Error attending event:", error);
@@ -158,15 +195,5 @@ export const getMyAttendedEvents = async (userId: string): Promise<Event[]> => {
   } catch (error) {
     console.error('Error fetching attended events:', error);
     return [];
-  }
-};
-
-export const getCurrentUserId = async () => {
-  try {
-    const user = await account.get();
-    return user.$id;
-  } catch (error) {
-    console.error('Error getting user:', error);
-    return null;
   }
 };

@@ -1,6 +1,6 @@
 import EventCard from '@/components/Eventcard';
 import { useAuth } from '@/context/AuthProvider';
-import { getCurrentUserId, getMyAttendedEvents, hasUserEvents } from '@/providers/appwrite/database';
+import { getMyAttendedEvents, hasUserEvents } from '@/providers/appwrite/database';
 import { Event } from "@/types";
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
@@ -10,47 +10,47 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function MyEventsScreen() {
 const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  const { isLoggedIn } = useAuth();
-  
-  const loadEvents = useCallback(async () => {
-    try {
-      if (!isLoggedIn) return;
-
-      setLoading(true);
-      const id = await getCurrentUserId();
-
-      if (!id) {
-        Alert.alert("Not Logged In", "Please log in to view your events.");
-        return;
-      }
-
-      const userEventExists = await hasUserEvents(id);
-      if (!userEventExists) {
-        setEvents([]); 
-        return;
-      }
-
-      const fetchedEvents = await getMyAttendedEvents(id);
-      setEvents(fetchedEvents);
-    } catch (err) {
-      const errorMessage = (err as Error).message || "Failed to load events.";
-      console.error("Error loading events:", err);
-      Alert.alert("Error", errorMessage);
-    } finally {
-      setLoading(false);
-    }
-  }, []); 
+  const { isLoggedIn, user } = useAuth();
+  const [userId, setUserId] = useState<string>("");
 
   useEffect(() => {
-    loadEvents();
-  }, []);
+        if (user?.$id) {
+            setUserId(user.$id);
+        }
+  }, [user]);
 
-  useFocusEffect(
-    useCallback(() => {
-      loadEvents();
-    }, [loadEvents])
-  );
-  
+useFocusEffect(
+  useCallback(() => {
+    async function fetchEvents() {
+      if (!user?.$id || !isLoggedIn) {
+        setEvents([]);
+        return;
+      }
+
+      try {
+        setLoading(true);
+
+        const userEventExists = await hasUserEvents(user.$id);
+        if (!userEventExists) {
+          setEvents([]);
+          return;
+        }
+
+        const fetchedEvents = await getMyAttendedEvents(user.$id);
+        setEvents(fetchedEvents);
+      } catch (err) {
+        const errorMessage = (err as Error).message || "Failed to load events.";
+        console.error("Error loading events:", err);
+        Alert.alert("Error", errorMessage);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchEvents(); 
+  }, [user, isLoggedIn])
+);
+
   return (
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContent}>

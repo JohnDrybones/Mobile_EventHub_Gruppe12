@@ -1,4 +1,5 @@
-import { fetchEventById } from "@/providers/appwrite/database";
+import { useAuth } from "@/context/AuthProvider";
+import { attendEvent, fetchEventById, isAttending, unAttendEvent } from "@/providers/appwrite/database";
 import { Event } from "@/types";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -6,58 +7,117 @@ import { Button, Dimensions, Image, ScrollView, StyleSheet, Text, View } from "r
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function EventDetailScreen() {
-  const { id } = useLocalSearchParams();
-  const eventId = id.toLocaleString();
-  const [event, setEvent] = useState<Event | null>(null);
+const { id } = useLocalSearchParams();
+    const eventId = id.toLocaleString();
+    const [userId, setUserId] = useState<string>("");
+    const [event, setEvent] = useState<Event | null>(null);
+    const [attending, setAttending] = useState<Boolean>();
+    const { user } = useAuth();
+
+    useEffect(() => {
+        if (user?.$id) {
+            setUserId(user.$id);
+        }
+    }, []);
+
+    useEffect(() => {
+        const loadEvent = async () => {
+            try {
+                const fetchedEvent = await fetchEventById(eventId);
+                setEvent(fetchedEvent);
+            } catch (err) {
+                const errorMessage = (err as { message?: string }).message || "An unknown error occurred."
+            }
+        };
+        loadEvent();
+    }, [id]);
+
+     useEffect(() => {
+              const loadAttending = async () => {
+                  try {
+                      const attendingFromDB = await isAttending(userId,eventId);
+                      setAttending(attendingFromDB);
+                  } catch (err) {
+                      const errorMessage = (err as { message?: string }).message || "An unknown error occurred."
+                  }
+              };
+              loadAttending();
+          }, [attending]);
 
 
-  useEffect(() => {
-    const loadEvent = async () => {
-      try {
-        const fetchedEvent = await fetchEventById(eventId);
-        setEvent(fetchedEvent);
-      } catch (err) {
-        const errorMessage = (err as { message?: string }).message || "An unknown error occurred."
-      }
-    };
-    loadEvent();
-  }, [id]);
-
-  if (!event) {
-    return (
-      <View style={styles.centered}>
-        <Text style={styles.errorText}>Event not found.</Text>
-      </View>
-    );
-  }
-
-  return (
-    <SafeAreaView style={styles.safeContainer}>
-      <View style={styles.container}>
-        <ScrollView contentContainerStyle={styles.scrollContent}>
-
-          <Image source={{ uri: event.imageUrl }} style={styles.image} />
-          <View style={styles.detailsBox}>
-            <Text style={styles.title}>{event.title}</Text>
-
-            <View style={styles.infoGroup}>
-              <Text style={styles.detailItem}>📅 {event.date}</Text>
-              <Text style={styles.detailItem}>⏰ {event.time}</Text>
-              <Text style={styles.detailItem}>📍 {event.location}</Text>
-              <Text style={styles.detailItem}>🏷️ {event.category}</Text>
+    if (!event) {
+        return (
+            <View style={styles.centered}>
+                <Text style={styles.errorText}>Event not found.</Text>
             </View>
+        );
+    }
 
-            <Text style={styles.description}>
-              {event.description}
-            </Text>
+    const handleAttend = async (eventId: string) => {
+        try {
+            if (userId !== "") {
+                const result = await attendEvent(userId, eventId);
+                setAttending(true);
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+        }
+    };
 
-            <Button title="Join Event" onPress={() => alert("You joined the event!")} />
-          </View>
-        </ScrollView>
-      </View>
-    </SafeAreaView>
-  );
+    const handleUnAttend = async (eventId: string) => {
+        try {
+            if (userId !== "") {
+                const result = await unAttendEvent(userId, eventId);
+                setAttending(false);
+            }
+        } catch (error) {
+            console.error("Login error:", error);
+        }
+    };
+
+    return (
+        <SafeAreaView style={styles.safeContainer}>
+            <View style={styles.container}>
+                <ScrollView contentContainerStyle={styles.scrollContent}>
+
+                    <Image source={{ uri: event.imageUrl }} style={styles.image} />
+                    <View style={styles.detailsBox}>
+                        <Text style={styles.title}>{event.title}</Text>
+
+                        <View style={styles.infoGroup}>
+                            <Text style={styles.detailItem}>📅 {event.date}</Text>
+                            <Text style={styles.detailItem}>⏰ {event.time}</Text>
+                            <Text style={styles.detailItem}>📍 {event.location}</Text>
+                            <Text style={styles.detailItem}>🏷️ {event.category}</Text>
+                        </View>
+
+                        <Text style={styles.description}>
+                            {event.description}
+                        </Text>
+
+                        {attending ?
+                            <Button
+                                title="Unregister"
+                                onPress={() => {
+                                    handleUnAttend(eventId)
+                                }}
+                            /> :
+
+                            <Button
+                                title="Register"
+                                onPress={() => {
+                                    handleAttend(eventId)
+                                }}
+                            />
+                        }
+
+                    </View>
+                </ScrollView>
+            </View>
+        </SafeAreaView>
+    );
 }
+
 
 const screenHeight = Dimensions.get("window").height;
 
