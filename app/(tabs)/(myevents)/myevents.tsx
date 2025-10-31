@@ -17,42 +17,42 @@ const [events, setEvents] = useState<Event[]>([]);
         if (user?.$id) {
             setUserId(user.$id);
         }
-  }, []);
+  }, [user]);
 
   
-  const loadEvents = useCallback(async () => {
-    try {
-      if (!isLoggedIn) return;
 
-      setLoading(true);
-
-      const userEventExists = await hasUserEvents(userId);
-      if (!userEventExists) {
-        setEvents([]); 
+useFocusEffect(
+  useCallback(() => {
+    async function fetchEvents() {
+      if (!user?.$id || !isLoggedIn) {
+        setEvents([]);
         return;
       }
 
-      const fetchedEvents = await getMyAttendedEvents(userId);
-      setEvents(fetchedEvents);
-    } catch (err) {
-      const errorMessage = (err as Error).message || "Failed to load events.";
-      console.error("Error loading events:", err);
-      Alert.alert("Error", errorMessage);
-    } finally {
-      setLoading(false);
+      try {
+        setLoading(true);
+
+        const userEventExists = await hasUserEvents(user.$id);
+        if (!userEventExists) {
+          setEvents([]);
+          return;
+        }
+
+        const fetchedEvents = await getMyAttendedEvents(user.$id);
+        setEvents(fetchedEvents);
+      } catch (err) {
+        const errorMessage = (err as Error).message || "Failed to load events.";
+        console.error("Error loading events:", err);
+        Alert.alert("Error", errorMessage);
+      } finally {
+        setLoading(false);
+      }
     }
-  }, []); 
 
-  useEffect(() => {
-    loadEvents();
-  }, []);
+    fetchEvents(); // call the async function
+  }, [user, isLoggedIn])
+);
 
-  useFocusEffect(
-    useCallback(() => {
-      loadEvents();
-    }, [loadEvents])
-  );
-  
   return (
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContent}>

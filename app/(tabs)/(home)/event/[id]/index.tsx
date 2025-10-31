@@ -11,7 +11,7 @@ const { id } = useLocalSearchParams();
     const eventId = id.toLocaleString();
     const [userId, setUserId] = useState<string>("");
     const [event, setEvent] = useState<Event | null>(null);
-    const [attending, setAttending] = useState<Boolean>(true);
+    const [attending, setAttending] = useState<Boolean>();
     const { user } = useAuth();
 
     useEffect(() => {
