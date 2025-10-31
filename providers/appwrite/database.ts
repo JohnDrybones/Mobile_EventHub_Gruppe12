@@ -55,11 +55,28 @@ export const fetchEventById = async (eventId: string): Promise<Event> => {
   }
 };
 
+export const hasUserEvents = async (userId: string): Promise<boolean> => {
+  if (!userId) return false; 
+
+  try {
+    const response = await databases.listDocuments(
+      DATABASE_ID || "DATABASE_ID",
+      'userevent',
+      [
+        Query.equal("userId", userId) 
+      ],
+    );
+    return response.documents.length > 0;
+  } catch (error) {
+    console.error("Error checking user events:", error);
+    return false;
+  }
+}
+
 
 
 export const getMyAttendedEvents = async (userId: string): Promise<Event[]> => {
   try {
-
     const userEvents = await databases.listDocuments(
       DATABASE_ID || "DATABASE_ID",  
       'userevent',
