@@ -1,6 +1,6 @@
 import EventCard from '@/components/Eventcard';
 import { useAuth } from '@/context/AuthProvider';
-import { getCurrentUserId, getMyAttendedEvents, hasUserEvents } from '@/providers/appwrite/database';
+import { getMyAttendedEvents, hasUserEvents } from '@/providers/appwrite/database';
 import { Event } from "@/types";
 import { useFocusEffect } from 'expo-router';
 import { useCallback, useEffect, useState } from 'react';
@@ -10,27 +10,29 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function MyEventsScreen() {
 const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, user } = useAuth();
+  const [userId, setUserId] = useState<string>("");
+
+  useEffect(() => {
+        if (user?.$id) {
+            setUserId(user.$id);
+        }
+  }, []);
+
   
   const loadEvents = useCallback(async () => {
     try {
       if (!isLoggedIn) return;
 
       setLoading(true);
-      const id = await getCurrentUserId();
 
-      if (!id) {
-        Alert.alert("Not Logged In", "Please log in to view your events.");
-        return;
-      }
-
-      const userEventExists = await hasUserEvents(id);
+      const userEventExists = await hasUserEvents(userId);
       if (!userEventExists) {
         setEvents([]); 
         return;
       }
 
-      const fetchedEvents = await getMyAttendedEvents(id);
+      const fetchedEvents = await getMyAttendedEvents(userId);
       setEvents(fetchedEvents);
     } catch (err) {
       const errorMessage = (err as Error).message || "Failed to load events.";

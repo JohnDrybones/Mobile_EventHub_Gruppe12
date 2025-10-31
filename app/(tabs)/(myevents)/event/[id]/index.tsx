@@ -1,4 +1,5 @@
-import { attendEvent, fetchEventById, getCurrentUserId, unAttendEvent } from "@/providers/appwrite/database";
+import { useAuth } from "@/context/AuthProvider";
+import { attendEvent, fetchEventById, isAttending, unAttendEvent } from "@/providers/appwrite/database";
 import { Event } from "@/types";
 import { useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
@@ -8,9 +9,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function EventDetailScreen() {
     const { id } = useLocalSearchParams();
     const eventId = id.toLocaleString();
-    const [userId, setUserid] = useState<string>("");
+    const [userId, setUserId] = useState<string>("");
     const [event, setEvent] = useState<Event | null>(null);
     const [attending, setAttending] = useState<Boolean>(true);
+    const { user } = useAuth();
+
+    useEffect(() => {
+        if (user?.$id) {
+            setUserId(user.$id);
+        }
+    }, []);
 
     useEffect(() => {
         const loadEvent = async () => {
@@ -24,19 +32,18 @@ export default function EventDetailScreen() {
         loadEvent();
     }, [id]);
 
-    useEffect(() => {
-        const findUserId = async () => {
-            try {
-                const id = await getCurrentUserId();
-                if (!id) return;
-                setUserid(id);
-            } catch (err) {
-                const errorMessage = (err as { message?: string }).message || "An unknown error occurred."
-            }
-        };
-        findUserId();
-    }, []);
-
+     useEffect(() => {
+              const loadAttending = async () => {
+                  try {
+                      const attendingFromDB = await isAttending(userId,eventId);
+                      setAttending(attendingFromDB);
+                      console.log("Attending", attendingFromDB)
+                  } catch (err) {
+                      const errorMessage = (err as { message?: string }).message || "An unknown error occurred."
+                  }
+              };
+              loadAttending();
+          }, [attending]);
 
     if (!event) {
         return (
@@ -89,7 +96,6 @@ export default function EventDetailScreen() {
                         </Text>
 
                         {attending ?
-
                             <Button
                                 title="Unregister"
                                 onPress={() => {
@@ -103,7 +109,6 @@ export default function EventDetailScreen() {
                                     handleAttend(eventId)
                                 }}
                             />
-
                         }
 
                     </View>
