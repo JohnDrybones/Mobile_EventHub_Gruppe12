@@ -1,5 +1,6 @@
 import EventCard from '@/components/EventCard';
-import { getCurrentUserId, getMyAttendedEvents } from '@/providers/appwrite/database';
+import { useAuth } from '@/context/AuthProvider';
+import { getCurrentUserId, getMyAttendedEvents, hasUserEvents } from '@/providers/appwrite/database';
 import { Event } from "@/types";
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView, StyleSheet, Text, View } from 'react-native';
@@ -8,24 +9,28 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 export default function MyEventsScreen() {
 const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const { isLoggedIn } = useAuth();
   useEffect(() => {
+    
     const loadEvents = async () => {
+      setEvents([]);
       try {
+        if(isLoggedIn){
         setLoading(true);
-        const id = await getCurrentUserId();
+        const id = await getCurrentUserId(); 
         
         if (!id) {
           Alert.alert("Not Logged In", "Please log in to view your events.");
           return;
         }
-
-        if(id){
-          console.log(id);
-        }
+        
+        const userEventExists = await hasUserEvents(id);
+        if(!userEventExists) return;
 
         const fetchedEvents = await getMyAttendedEvents(id);
         setEvents(fetchedEvents);
+        }
+                 
       } catch (err) {
         const errorMessage = (err as Error).message || "Failed to load events.";
         console.error("Error loading events:", err);
@@ -38,7 +43,8 @@ const [events, setEvents] = useState<Event[]>([]);
 
     loadEvents();
     
-  }, []); // Run once on mount
+  }, [isLoggedIn]); 
+  
   return (
     <SafeAreaView style={styles.safeContainer}>
       <ScrollView style={styles.container} contentContainerStyle={styles.scrollViewContent}>
@@ -52,19 +58,16 @@ const [events, setEvents] = useState<Event[]>([]);
         <View style={styles.sectionContainer}>
           <Text style={styles.sectionTitle}>Upcoming Events</Text>
           <View style={styles.verticalList}>
-            {events.map((event) => (
+            {events.length > 0 ? events.map((event) => (
               <EventCard
                 key={event.id}
                 event={event}
               />
-            ))}
+            )):
+              <Text> Not attending any Events</Text>
+            }
           </View>
         </View>
-
-        <View style={styles.placeholderContainer}>
-          <Text style={styles.placeholderText}>Your other screen content goes here...</Text>
-        </View>
-
       </ScrollView>
     </SafeAreaView>
   );
