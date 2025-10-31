@@ -16,8 +16,6 @@ export default function ProfileScreen() {
 
   const { user, logout, isLoggedIn } = useAuth();
 
-  console.log(isLoggedIn);
-
   const handleLogout = async () => {
     try {
       await logout();

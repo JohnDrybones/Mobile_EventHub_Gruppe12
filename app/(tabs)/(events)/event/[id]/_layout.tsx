@@ -1,12 +1,15 @@
-import { Stack } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 
 export default function EventsEventLayout() {
+    const params = useLocalSearchParams<{ title?: string }>();
+    const title = params.title || "Event Details"; 
+    
     return (
         <Stack>
             <Stack.Screen
                 name="index"
                 options={{
-                    title: 'Event Details',
+                    title: title,
                     headerShown: true,
                     headerBackTitle: 'Back',
                 }}
@@ -14,3 +17,4 @@ export default function EventsEventLayout() {
         </Stack>
     );
 }
+

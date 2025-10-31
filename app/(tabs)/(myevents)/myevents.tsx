@@ -20,10 +20,6 @@ const [events, setEvents] = useState<Event[]>([]);
           return;
         }
 
-        if(id){
-          console.log(id);
-        }
-
         const fetchedEvents = await getMyAttendedEvents(id);
         setEvents(fetchedEvents);
       } catch (err) {
