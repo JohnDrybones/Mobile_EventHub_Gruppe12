@@ -87,7 +87,6 @@ export const isAttending = async (userId: string, eventId: string): Promise<bool
     );
     
     if(entryExists.documents.length === 0){
-      console.log("FAILED");
       return false;
     }
 
@@ -106,11 +105,12 @@ export const attendEvent = async (userId: string, eventId: string): Promise<bool
       DATABASE_ID || "DATABASE_ID",
       'userevent',
       [
-        Query.equal("userId", userId) 
+        Query.equal("userId", userId), 
+        Query.equal("eventId", eventId)
       ],
     );
     
-    if(entryExists.documents.length === 0){
+    if(entryExists.documents.length > 0){
       console.log("FAILED");
       return false;
     }

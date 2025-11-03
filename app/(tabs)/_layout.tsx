@@ -38,7 +38,7 @@ export default function TabLayout() {
         options={{
           title: 'My Events',
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="event" color={color} />,
-          href: isLoggedIn ? undefined : null, 
+          href: isLoggedIn ? undefined : null,
         }}
       />
 
@@ -47,7 +47,16 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="person" color={color} />,
-          href: isLoggedIn ? undefined : null, 
+          href: isLoggedIn ? undefined : null,
+        }}
+      />
+
+      <Tabs.Screen
+        name="sign-up"
+        options={{
+          title: 'Logg inn',
+          tabBarIcon: ({ color }) => <MaterialIcons size={28} name="login" color={color} />,
+          href: null,
         }}
       />
 
@@ -56,7 +65,7 @@ export default function TabLayout() {
         options={{
           title: 'Logg inn',
           tabBarIcon: ({ color }) => <MaterialIcons size={28} name="login" color={color} />,
-          href: isLoggedIn ? null : undefined, 
+          href: isLoggedIn ? null : undefined,
         }}
       />
     </Tabs>

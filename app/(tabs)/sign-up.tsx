@@ -2,12 +2,12 @@ import { Picker } from "@react-native-picker/picker";
 import { router } from "expo-router";
 import { useState } from "react";
 import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
 
 export default function SignUpScreen() {
@@ -129,7 +129,7 @@ export default function SignUpScreen() {
 
         <View style={styles.footer}>
         <Text style={styles.footerText}>Har du allerede en konto? </Text>
-            <TouchableOpacity onPress={() => router.replace("/sign-in")}>
+            <TouchableOpacity onPress={() => router.replace("/sign-up")}>
                 <Text style={styles.link}>Logg inn</Text>
             </TouchableOpacity>
         </View>
