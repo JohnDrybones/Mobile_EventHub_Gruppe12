@@ -1,13 +1,14 @@
-import { Picker } from "@react-native-picker/picker";
 import { router } from "expo-router";
-import { useState } from "react";
+import React, { useState } from "react";
 import {
+  Modal,
   ScrollView,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
+  FlatList,
 } from "react-native";
 
 export default function SignUpScreen() {
@@ -19,6 +20,12 @@ export default function SignUpScreen() {
   const [address, setAddress] = useState("");
   const [zipCode, setZipCode] = useState("");
   const [place, setPlace] = useState("");
+
+  const [ageModalVisible, setAgeModalVisible] = useState(false);
+  const [genderModalVisible, setGenderModalVisible] = useState(false);
+
+  const ages = Array.from({ length: 83 }, (_, i) => (i + 18).toString());
+  const genders = ["Mann", "Kvinne", "Vil ikke oppgi"];
 
   const handleRegister = () => {
     console.log({
@@ -68,35 +75,80 @@ export default function SignUpScreen() {
           secureTextEntry
         />
 
-        {/* Alder (Drop-down) */}
-        <View style={styles.pickerContainer}>
-          <Text style={styles.pickerLabel}>Alder</Text>
-          <Picker
-            selectedValue={age}
-            onValueChange={(value) => setAge(value)}
-            style={styles.picker}
-          >
-            <Picker.Item label="Velg alder" value="" />
-            {Array.from({ length: 83 }, (_, i) => i + 18).map((num) => (
-              <Picker.Item key={num} label={num.toString()} value={num.toString()} />
-            ))}
-          </Picker>
-        </View>
+        {/* Alder dropdown */}
+        <TouchableOpacity
+          style={styles.dropdownContainer}
+          onPress={() => setAgeModalVisible(true)}
+        >
+          <Text style={styles.dropdownLabel}>Alder</Text>
+          <Text style={styles.dropdownText}>
+            {age ? `${age} år` : "Velg alder"}
+          </Text>
+        </TouchableOpacity>
 
-        {/* Kjønn (Drop-down) */}
-        <View style={styles.pickerContainer}>
-          <Text style={styles.pickerLabel}>Kjønn</Text>
-          <Picker
-            selectedValue={gender}
-            onValueChange={(value) => setGender(value)}
-            style={styles.picker}
-          >
-            <Picker.Item label="Velg kjønn" value="" />
-            <Picker.Item label="Mann" value="mann" />
-            <Picker.Item label="Kvinne" value="kvinne" />
-            <Picker.Item label="Vil ikke oppgi" value="ukjent" />
-          </Picker>
-        </View>
+        <Modal
+          visible={ageModalVisible}
+          transparent
+          animationType="slide"
+          onRequestClose={() => setAgeModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalBox}>
+              <Text style={styles.modalTitle}>Velg alder</Text>
+              <FlatList
+                data={ages}
+                keyExtractor={(item) => item}
+                renderItem={({ item }) => (
+                  <TouchableOpacity
+                    style={styles.modalItem}
+                    onPress={() => {
+                      setAge(item);
+                      setAgeModalVisible(false);
+                    }}
+                  >
+                    <Text style={styles.modalItemText}>{item}</Text>
+                  </TouchableOpacity>
+                )}
+              />
+            </View>
+          </View>
+        </Modal>
+
+        {/* Kjønn dropdown */}
+        <TouchableOpacity
+          style={styles.dropdownContainer}
+          onPress={() => setGenderModalVisible(true)}
+        >
+          <Text style={styles.dropdownLabel}>Kjønn</Text>
+          <Text style={styles.dropdownText}>
+            {gender ? gender : "Velg kjønn"}
+          </Text>
+        </TouchableOpacity>
+
+        <Modal
+          visible={genderModalVisible}
+          transparent
+          animationType="slide"
+          onRequestClose={() => setGenderModalVisible(false)}
+        >
+          <View style={styles.modalOverlay}>
+            <View style={styles.modalBox}>
+              <Text style={styles.modalTitle}>Velg kjønn</Text>
+              {genders.map((g) => (
+                <TouchableOpacity
+                  key={g}
+                  style={styles.modalItem}
+                  onPress={() => {
+                    setGender(g);
+                    setGenderModalVisible(false);
+                  }}
+                >
+                  <Text style={styles.modalItemText}>{g}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+        </Modal>
 
         {/* Adresse */}
         <TextInput
@@ -128,10 +180,10 @@ export default function SignUpScreen() {
         </TouchableOpacity>
 
         <View style={styles.footer}>
-        <Text style={styles.footerText}>Har du allerede en konto? </Text>
-            <TouchableOpacity onPress={() => router.replace("/sign-up")}>
-                <Text style={styles.link}>Logg inn</Text>
-            </TouchableOpacity>
+          <Text style={styles.footerText}>Har du allerede en konto? </Text>
+          <TouchableOpacity onPress={() => router.replace("/sign-in")}>
+            <Text style={styles.link}>Logg inn</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -173,24 +225,52 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: "black",
   },
-  pickerContainer: {
+  dropdownContainer: {
     backgroundColor: "#fff",
     borderRadius: 8,
     borderWidth: 1,
     borderColor: "#d1d5db",
+    padding: 15,
     marginBottom: 16,
   },
-  picker: {
-    height: 50,
-    width: "100%",
-    color: "black",
-  },
-  pickerLabel: {
+  dropdownLabel: {
     fontSize: 14,
     fontWeight: "500",
     color: "#374151",
-    marginLeft: 12,
-    marginTop: 6,
+    marginBottom: 4,
+  },
+  dropdownText: {
+    fontSize: 16,
+    color: "#111827",
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.3)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalBox: {
+    backgroundColor: "#fff",
+    width: "80%",
+    maxHeight: "70%",
+    borderRadius: 12,
+    padding: 20,
+  },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  modalItem: {
+    paddingVertical: 12,
+    borderBottomWidth: 1,
+    borderColor: "#e5e7eb",
+  },
+  modalItemText: {
+    fontSize: 16,
+    color: "#111827",
+    textAlign: "center",
   },
   button: {
     backgroundColor: "#4f46e5",
