@@ -1,6 +1,7 @@
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
+  FlatList,
   Modal,
   ScrollView,
   StyleSheet,
@@ -8,7 +9,6 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  FlatList,
 } from "react-native";
 
 export default function SignUpScreen() {
@@ -55,6 +55,7 @@ export default function SignUpScreen() {
           onChangeText={setEmail}
           keyboardType="email-address"
           autoCapitalize="none"
+          placeholderTextColor="black"
         />
 
         {/* Passord */}
@@ -64,6 +65,7 @@ export default function SignUpScreen() {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
+          placeholderTextColor="black"
         />
 
         {/* Bekreft passord */}
@@ -73,6 +75,7 @@ export default function SignUpScreen() {
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
+          placeholderTextColor="black"
         />
 
         {/* Alder dropdown */}
@@ -156,6 +159,7 @@ export default function SignUpScreen() {
           placeholder="Adresse"
           value={address}
           onChangeText={setAddress}
+          placeholderTextColor="black"
         />
 
         {/* Postnummer */}
@@ -165,6 +169,7 @@ export default function SignUpScreen() {
           value={zipCode}
           onChangeText={setZipCode}
           keyboardType="numeric"
+          placeholderTextColor="black"
         />
 
         {/* Sted */}
@@ -173,6 +178,7 @@ export default function SignUpScreen() {
           placeholder="Sted"
           value={place}
           onChangeText={setPlace}
+          placeholderTextColor="black"
         />
 
         <TouchableOpacity style={styles.button} onPress={handleRegister}>
