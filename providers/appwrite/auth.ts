@@ -22,7 +22,10 @@ const handleError = (error: AppwriteException): Failure => {
 		case 409:
 			return { success: false, error: "Email already in use" };
 		default:
-			return { success: false, error: "An unknown error occurred" };
+			return {
+				success: false,
+				error: error.message ?? "An unknown error occurred",
+			};
 	}
 };
 
@@ -47,7 +50,7 @@ const handleResponse = <T>(response: T): Success<T> => {
 // Bruker Promise-kjeding (.then/.catch) for å håndtere resultat og feil
 export const login = (email: string, password: string) =>
 	account
-		.createEmailPasswordSession({email, password})
+		.createEmailPasswordSession({ email, password })
 		.then(handleResponse)
 		.catch(handleError);
 

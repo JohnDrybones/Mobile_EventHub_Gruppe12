@@ -5,16 +5,19 @@ import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from "reac
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, isLoggedIn } = useAuth();
+  const { login } = useAuth();
+
   const handleSignIn = async () => {
     try {
       if (email === '' || password === '') {
         Alert.alert("Enter login details");
-
       } else {
-        await login(email, password);
-        console.log("Logged in successfully!");
-        router.replace("/profile");
+        const response = await login(email, password);
+        if (response.success) {
+          router.replace("/profile");
+        } else {
+          Alert.alert("Login failed", response.error ?? "Ukjent feil");
+        }
       }
     } catch (error) {
       console.error("Login error:", error);

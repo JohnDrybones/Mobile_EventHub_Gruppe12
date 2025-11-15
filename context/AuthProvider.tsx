@@ -13,7 +13,7 @@ import { createContext, useCallback, useContext, useEffect, useState } from "rea
 type AuthContextType = {
   user: User | null; // Gjeldende bruker eller null hvis ikke logget inn
   isLoading: boolean; // Indikerer om autentisering pågår
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (email: string, password: string, admin: boolean) => Promise<void>;
   logout: () => Promise<void>;
   isAdmin: boolean; // Bekvemmelighetsverdi for rollesjekk
@@ -25,9 +25,9 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
-  login: async () => {},
-  register: async () => {},
-  logout: async () => {},
+  login: async () => ({ success: false, error: "AuthProvider not initialized" }),
+  register: async () => { },
+  logout: async () => { },
   isAdmin: false,
   isLoggedIn: false,
   isLoaded: false,
@@ -67,11 +67,21 @@ export default function AuthProvider({
   }, [resetLoading]);
 
   // Innloggingsfunksjon - simulerer API-kall
+
   const loginUser = async (email: string, password: string) => {
     setLoadings();
+
     const result = await loginAndGetUser(email, password);
-    setUser(result.success ? result.data : null);
+
+    if (result.success) {
+      setUser(result.data);
+      resetLoading();
+      return { success: true };
+    }
+
+    setUser(null);
     resetLoading();
+    return { success: false, error: result.error };
   };
 
   // Utloggingsfunksjon - simulerer API-kall
