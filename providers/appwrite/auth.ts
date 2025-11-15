@@ -47,7 +47,7 @@ const handleResponse = <T>(response: T): Success<T> => {
 // Bruker Promise-kjeding (.then/.catch) for å håndtere resultat og feil
 export const login = (email: string, password: string) =>
 	account
-		.createEmailPasswordSession(email, password)
+		.createEmailPasswordSession({email, password})
 		.then(handleResponse)
 		.catch(handleError);
 
@@ -60,7 +60,7 @@ export const register = (email: string, password: string) =>
 
 // Logg ut bruker (avslutter gjeldende sesjon)
 export const logout = () =>
-	account.deleteSession("current").then(handleResponse).catch(handleError);
+	account.deleteSession({ sessionId: "current" }).then(handleResponse).catch(handleError);
 
 // Hent brukerinformasjon for pålogget bruker
 export const getUser = () =>

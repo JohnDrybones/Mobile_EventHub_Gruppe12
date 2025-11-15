@@ -14,12 +14,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ProfileScreen() {
 
-  const { user, logout, isLoggedIn } = useAuth();
+  const { user, logout } = useAuth();
 
   const handleLogout = async () => {
     try {
       await logout();
-      console.log("Logged out successfully!");
       router.navigate({
       pathname: '/sign-in',
       });
@@ -27,9 +26,13 @@ export default function ProfileScreen() {
       console.error("Logout error:", error);
     }
   };
+  
   const handlePress = (title: string) => {
     console.log(`Action: ${title}`);
   };
+
+
+
 
   return (
     <SafeAreaView style={styles.safeContainer}>
@@ -39,8 +42,8 @@ export default function ProfileScreen() {
             source={{ uri: 'https://picsum.photos/150' }}
             style={styles.profileImage}
           />
-          <Text style={styles.userName}>Alex Johnson</Text>
-          <Text style={styles.userEmail}>alex.johnson@example.com</Text>
+          <Text style={styles.userName}>{user?.name}</Text>
+          <Text style={styles.userEmail}>{user?.email}</Text>
 
           <View style={styles.infoFieldsContainer}>
             <View style={styles.detailRow}>
