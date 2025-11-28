@@ -2,15 +2,15 @@ import { useAuth } from "@/context/AuthProvider";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
-  Alert,
-  FlatList,
-  Modal,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    Alert,
+    FlatList,
+    Modal,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from "react-native";
 
 export default function SignUpScreen() {
@@ -38,7 +38,7 @@ export default function SignUpScreen() {
     }
 
     if (password !== confirmPassword) {
-        Alert.alert("Feil", "Passordene er ikke like");
+        Alert.alert("Feil", "Passwords dont match");
         return;
     }
 
@@ -55,8 +55,8 @@ export default function SignUpScreen() {
   return (
     <ScrollView contentContainerStyle={styles.scroll}>
       <View style={styles.container}>
-        <Text style={styles.title}>Opprett konto</Text>
-        <Text style={styles.subtitle}>Registrer deg for å bruke EventHub</Text>
+        <Text style={styles.title}>Create Account</Text>
+        <Text style={styles.subtitle}>Register to use EventHub</Text>
 
         {/* Navn*/}
         <TextInput
