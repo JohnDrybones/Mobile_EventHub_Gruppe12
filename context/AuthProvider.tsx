@@ -23,7 +23,6 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => ({ success: false, error: "AuthProvider not initialized" }),
   register: async (email, password, admin) => { },
   logout: async () => { },
-  isAdmin: false,
   isLoggedIn: false,
   isLoaded: false,
 });
@@ -66,7 +65,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     return { success: false, error: result.error };
   };
 
-  const registerUser = async (email: string, password: string) => {
+  const registerUser = async (email: string, password: string, name: string) => {
     setLoadings();
     const result = await signUpAndLogin(email, password);
     setUser(result.success ? result.data : null);
@@ -77,14 +76,6 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     setLoadings();
     await logout();
     setUser(null);
-    resetLoading();
-  };
-
-  // Registreringsfunksjon - simulerer API-kall
-  const registerUser = async (email: string, password: string, admin: boolean) => {
-    setLoadings();
-    const result = await signUpAndLogin(email, password);
-    setUser(result.success ? result.data : null);
     resetLoading();
   };
 
