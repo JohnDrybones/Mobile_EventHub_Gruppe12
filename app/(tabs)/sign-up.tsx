@@ -42,7 +42,7 @@ export default function SignUpScreen() {
     }
 
     try {
-        await register(email, password, false);
+        await register(email, password);
         
         router.replace("/profile");
     } catch (error) {

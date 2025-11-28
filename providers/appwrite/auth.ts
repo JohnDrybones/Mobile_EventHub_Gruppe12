@@ -1,12 +1,9 @@
-import { ROLES, type Role } from "@/types";
 import { ID, type AppwriteException, type Models } from "react-native-appwrite";
 import { account } from ".";
-import type { Failure, Result, Success } from "./types";
+import type { Failure, Success } from "./types";
 
 // Utvidet brukertype som inkluderer rolleinformasjon
-export type User = Models.User<Models.Preferences> & {
-	role: Role;
-};
+export type User = Models.User<Models.Preferences>
 export type Session = Models.Session;
 
 //  Konverterer Appwrite feilkoder til brukervennlige feilmeldinger
@@ -27,16 +24,6 @@ const handleError = (error: AppwriteException): Failure => {
 				error: error.message ?? "An unknown error occurred",
 			};
 	}
-};
-
-// Hjelpefunksjon for å hente brukerrolle fra preferanser
-// Sjekker om en gyldig rolle eksisterer i brukerpreferanser
-// Returnerer standardrollen USER hvis ingen gyldig rolle finnes
-const extractRole = (prefs: Models.Preferences): Role => {
-	if (prefs?.role && Object.keys(ROLES).includes(prefs.role)) {
-		return prefs.role as Role;
-	}
-	return ROLES.USER;
 };
 
 // Hjelpefunksjon for å håndtere vellykkede API-responser
@@ -69,28 +56,10 @@ export const logout = () =>
 export const getUser = () =>
 	account.get().then(handleResponse).catch(handleError);
 
-// Hent kun brukerrolle for pålogget bruker
-export const getUserRole = (): Promise<Result<Role>> =>
-	account.getPrefs().then(extractRole).then(handleResponse).catch(handleError);
-
 // Hent brukerinformasjon med rolle for pålogget bruker
 // Bruker Promise.all for å kjøre to API-kall parallelt (mer effektivt)
 // og deretter kombinere resultatene
-export const getUserWithRole = async () => {
-	const result = await Promise.all([getUser(), getUserRole()]);
-	const [user, role] = result;
-	if (user.success) {
-		return {
-			success: true,
-			data: {
-				...user.data,
-				role: role.success ? role.data : ROLES.USER,
-			},
-		} as Success<User>;
-	}
 
-	return user;
-};
 
 // Kombiner innlogging og henting av brukerinformasjon
 // Eksempel på sammensatt operasjon med sekvensiell flyt
@@ -99,7 +68,7 @@ export const loginAndGetUser = async (email: string, password: string) => {
 	if (!loginResult.success) {
 		return loginResult;
 	}
-	return getUserWithRole();
+	return getUser();
 };
 
 // Registrer ny bruker og logg inn i samme operasjon

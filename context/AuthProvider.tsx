@@ -1,90 +1,77 @@
 import {
   type User,
-  getUserWithRole,
+  getUser,
   loginAndGetUser,
   logout,
   signUpAndLogin,
 } from "@/providers/appwrite/auth";
-import { ROLES } from "@/types";
 
-import { createContext, useCallback, useContext, useEffect, useState } from "react";
-
-// Definerer form og innhold på autentiseringskonteksten
+import { createContext, useContext, useEffect, useState } from "react";
 type AuthContextType = {
-  user: User | null; // Gjeldende bruker eller null hvis ikke logget inn
-  isLoading: boolean; // Indikerer om autentisering pågår
+  user: User | null;
+  isLoading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  register: (email: string, password: string, admin: boolean) => Promise<void>;
+  register: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  isAdmin: boolean; // Bekvemmelighetsverdi for rollesjekk
-  isLoggedIn: boolean; // Bekvemmelighetsverdi for innloggingsstatus
-  isLoaded: boolean; // Indikerer om innledende brukerdata er lastet
+  isLoggedIn: boolean;
+  isLoaded: boolean;
 };
 
-// Oppretter konteksten med standardverdier
 const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
   login: async () => ({ success: false, error: "AuthProvider not initialized" }),
-  register: async (email, password, admin) => { },
-  logout: async () => { },
-  isAdmin: false,
+  register: async () => {},
+  logout: async () => {},
   isLoggedIn: false,
   isLoaded: false,
 });
 
-// Hovedkomponent som gir autentiseringskontekst til barne-komponenter
-export default function AuthProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  // State for å holde brukerdata og lastestatus
+export default function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Hjelpefunksjon for å tilbakestille lastestatuser
-  const resetLoading = useCallback(() => {
+  const resetLoading = () => {
     setLoading(false);
     setIsLoaded(true);
-  }, []);
+  };
 
-  const setLoadings = useCallback(() => {
+  const setLoadings = () => {
     setLoading(true);
     setIsLoaded(false);
-  }, []);
+  };
 
-  // Henter brukerdata ved oppstart
   useEffect(() => {
-    const fetchUserdata = async () => {
-      setLoading(true);
-      const result = await getUserWithRole();
+    const init = async () => {
+      setLoadings();
+      const result = await getUser();
       setUser(result.success ? result.data : null);
       resetLoading();
     };
-    fetchUserdata();
-  }, [resetLoading]);
-
-  // Innloggingsfunksjon - simulerer API-kall
+    init();
+  }, []);
 
   const loginUser = async (email: string, password: string) => {
     setLoadings();
-
     const result = await loginAndGetUser(email, password);
-
     if (result.success) {
       setUser(result.data);
       resetLoading();
       return { success: true };
     }
-
     setUser(null);
     resetLoading();
     return { success: false, error: result.error };
   };
 
-  // Utloggingsfunksjon - simulerer API-kall
+  const registerUser = async (email: string, password: string) => {
+    setLoadings();
+    const result = await signUpAndLogin(email, password);
+    setUser(result.success ? result.data : null);
+    resetLoading();
+  };
+
   const logoutUser = async () => {
     setLoadings();
     await logout();
@@ -92,23 +79,13 @@ export default function AuthProvider({
     resetLoading();
   };
 
-  // Registreringsfunksjon - simulerer API-kall
-  const registerUser = async (email: string, password: string, admin: boolean) => {
-    setLoadings();
-    const result = await signUpAndLogin(email, password);
-    setUser(result.success ? result.data : null);
-    resetLoading();
-  };
-
-  // Returnerer kontekstprovideren med alle nødvendige verdier
   return (
     <AuthContext.Provider
       value={{
         user,
         isLoading: loading,
-        isAdmin: !!(user?.role === ROLES.ADMIN),
+        isLoggedIn: user !== null,
         isLoaded,
-        isLoggedIn: !!(user !== null),
         login: loginUser,
         logout: logoutUser,
         register: registerUser,
@@ -119,11 +96,4 @@ export default function AuthProvider({
   );
 }
 
-// Custom hook for enkel tilgang til autentiseringskonteksten
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
-};
+export const useAuth = () => useContext(AuthContext);
