@@ -67,7 +67,7 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
 
   const registerUser = async (email: string, password: string, name: string) => {
     setLoadings();
-    const result = await signUpAndLogin(email, password);
+    const result = await signUpAndLogin(email, password, name);
     setUser(result.success ? result.data : null);
     resetLoading();
   };
