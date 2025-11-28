@@ -11,7 +11,7 @@ type AuthContextType = {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  register: (email: string, password: string) => Promise<void>;
+  register: (email: string, password: string, name: string) => Promise<void>;
   logout: () => Promise<void>;
   isLoggedIn: boolean;
   isLoaded: boolean;
@@ -21,8 +21,9 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
   login: async () => ({ success: false, error: "AuthProvider not initialized" }),
-  register: async () => {},
-  logout: async () => {},
+  register: async (email, password, admin) => { },
+  logout: async () => { },
+  isAdmin: false,
   isLoggedIn: false,
   isLoaded: false,
 });
@@ -79,6 +80,15 @@ export default function AuthProvider({ children }: { children: React.ReactNode }
     resetLoading();
   };
 
+  // Registreringsfunksjon - simulerer API-kall
+  const registerUser = async (email: string, password: string, admin: boolean) => {
+    setLoadings();
+    const result = await signUpAndLogin(email, password);
+    setUser(result.success ? result.data : null);
+    resetLoading();
+  };
+
+  // Returnerer kontekstprovideren med alle nødvendige verdier
   return (
     <AuthContext.Provider
       value={{

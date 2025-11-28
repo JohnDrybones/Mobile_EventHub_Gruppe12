@@ -42,9 +42,9 @@ export const login = (email: string, password: string) =>
 		.catch(handleError);
 
 // Registrer ny bruker
-export const register = (email: string, password: string) =>
+export const register = (email: string, password: string, name?: string) =>
 	account
-		.create(ID.unique(), email, password)
+		.create(ID.unique(), email, password, name)
 		.then(handleResponse)
 		.catch(handleError);
 
@@ -74,8 +74,8 @@ export const loginAndGetUser = async (email: string, password: string) => {
 // Registrer ny bruker og logg inn i samme operasjon
 // For å sette opp en ny bruker og umiddelbart logge inn
 // Oppretter også en profil for den nye brukeren
-export const signUpAndLogin = async (email: string, password: string) => {
-	const registerResult = await register(email, password);
+export const signUpAndLogin = async (email: string, password: string, name?: string) => {
+	const registerResult = await register(email, password, name);
 	if (!registerResult.success) {
 		return registerResult;
 	}
