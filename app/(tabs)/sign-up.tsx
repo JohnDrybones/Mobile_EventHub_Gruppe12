@@ -18,6 +18,7 @@ export default function SignUpScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
@@ -31,8 +32,8 @@ export default function SignUpScreen() {
   const genders = ["Mann", "Kvinne", "Vil ikke oppgi"];
 
   const handleRegister = async () => {
-    if (!email || !password || !confirmPassword) {
-        Alert.alert("Feil", "Vennligst fyll ut e-post og passord");
+    if (!email || !password || !confirmPassword || !name) {
+        Alert.alert("Feil", "Vennligst fyll ut e-post, passord og navn");
         return;
     }
 
@@ -42,7 +43,7 @@ export default function SignUpScreen() {
     }
 
     try {
-        await register(email, password, false);
+        await register(email, password, name);
         
         router.replace("/profile");
     } catch (error) {
@@ -56,6 +57,15 @@ export default function SignUpScreen() {
       <View style={styles.container}>
         <Text style={styles.title}>Opprett konto</Text>
         <Text style={styles.subtitle}>Registrer deg for å bruke EventHub</Text>
+
+        {/* Navn*/}
+        <TextInput
+          style={styles.input}
+          placeholder="Navn"
+          value={name}
+          onChangeText={setName}
+          placeholderTextColor="black"
+        />
 
         {/* E-post */}
         <TextInput

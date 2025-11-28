@@ -14,7 +14,7 @@ type AuthContextType = {
   user: User | null; // Gjeldende bruker eller null hvis ikke logget inn
   isLoading: boolean; // Indikerer om autentisering pågår
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
-  register: (email: string, password: string, admin: boolean) => Promise<void>;
+  register: (email: string, password: string, name: string) => Promise<void>;
   logout: () => Promise<void>;
   isAdmin: boolean; // Bekvemmelighetsverdi for rollesjekk
   isLoggedIn: boolean; // Bekvemmelighetsverdi for innloggingsstatus
@@ -26,7 +26,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
   login: async () => ({ success: false, error: "AuthProvider not initialized" }),
-  register: async (email, password, admin) => { },
+  register: async (email, password, name) => { },
   logout: async () => { },
   isAdmin: false,
   isLoggedIn: false,
@@ -93,9 +93,9 @@ export default function AuthProvider({
   };
 
   // Registreringsfunksjon - simulerer API-kall
-  const registerUser = async (email: string, password: string, admin: boolean) => {
+  const registerUser = async (email: string, password: string, name: string) => {
     setLoadings();
-    const result = await signUpAndLogin(email, password);
+    const result = await signUpAndLogin(email, password,name);
     setUser(result.success ? result.data : null);
     resetLoading();
   };
