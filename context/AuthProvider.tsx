@@ -26,7 +26,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: true,
   login: async () => ({ success: false, error: "AuthProvider not initialized" }),
-  register: async () => { },
+  register: async (email, password, admin) => { },
   logout: async () => { },
   isAdmin: false,
   isLoggedIn: false,
@@ -93,7 +93,7 @@ export default function AuthProvider({
   };
 
   // Registreringsfunksjon - simulerer API-kall
-  const registerUser = async (email: string, password: string) => {
+  const registerUser = async (email: string, password: string, admin: boolean) => {
     setLoadings();
     const result = await signUpAndLogin(email, password);
     setUser(result.success ? result.data : null);

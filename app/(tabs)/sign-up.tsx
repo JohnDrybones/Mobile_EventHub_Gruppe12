@@ -1,6 +1,8 @@
+import { useAuth } from "@/context/AuthProvider";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import {
+  Alert,
   FlatList,
   Modal,
   ScrollView,
@@ -12,6 +14,7 @@ import {
 } from "react-native";
 
 export default function SignUpScreen() {
+  const { register, isLoading } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -27,18 +30,25 @@ export default function SignUpScreen() {
   const ages = Array.from({ length: 83 }, (_, i) => (i + 18).toString());
   const genders = ["Mann", "Kvinne", "Vil ikke oppgi"];
 
-  const handleRegister = () => {
-    console.log({
-      email,
-      password,
-      confirmPassword,
-      age,
-      gender,
-      address,
-      zipCode,
-      place,
-    });
-    router.push("/");
+  const handleRegister = async () => {
+    if (!email || !password || !confirmPassword) {
+        Alert.alert("Feil", "Vennligst fyll ut e-post og passord");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        Alert.alert("Feil", "Passordene er ikke like");
+        return;
+    }
+
+    try {
+        await register(email, password, false);
+        
+        router.replace("/profile");
+    } catch (error) {
+        console.error(error);
+        Alert.alert("Feil", "Kunne ikke registrere bruker. Sjekk at e-posten er gyldig.");
+    }
   };
 
   return (
@@ -181,8 +191,14 @@ export default function SignUpScreen() {
           placeholderTextColor="black"
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Registrer deg</Text>
+        <TouchableOpacity 
+            style={[styles.button, isLoading && { opacity: 0.7 }]} 
+            onPress={handleRegister}
+            disabled={isLoading}
+        >
+          <Text style={styles.buttonText}>
+            {isLoading ? "Registrerer..." : "Registrer deg"}
+          </Text>
         </TouchableOpacity>
 
         <View style={styles.footer}>
