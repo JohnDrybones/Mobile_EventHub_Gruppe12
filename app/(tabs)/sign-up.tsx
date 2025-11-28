@@ -29,11 +29,11 @@ export default function SignUpScreen() {
   const [genderModalVisible, setGenderModalVisible] = useState(false);
 
   const ages = Array.from({ length: 83 }, (_, i) => (i + 18).toString());
-  const genders = ["Mann", "Kvinne", "Vil ikke oppgi"];
+  const genders = ["Male", "Female", "None"];
 
   const handleRegister = async () => {
     if (!email || !password || !confirmPassword || !name) {
-        Alert.alert("Feil", "Vennligst fyll ut e-post, passord og navn");
+        Alert.alert("Error", "Please fill in your email, password and name");
         return;
     }
 
@@ -48,7 +48,7 @@ export default function SignUpScreen() {
         router.replace("/profile");
     } catch (error) {
         console.error(error);
-        Alert.alert("Feil", "Kunne ikke registrere bruker. Sjekk at e-posten er gyldig.");
+        Alert.alert("Error", "Unable to register user. Check that the email is valid.");
     }
   };
 
@@ -61,7 +61,7 @@ export default function SignUpScreen() {
         {/* Navn*/}
         <TextInput
           style={styles.input}
-          placeholder="Navn"
+          placeholder="Name"
           value={name}
           onChangeText={setName}
           placeholderTextColor="black"
@@ -70,7 +70,7 @@ export default function SignUpScreen() {
         {/* E-post */}
         <TextInput
           style={styles.input}
-          placeholder="E-post"
+          placeholder="Email"
           value={email}
           onChangeText={setEmail}
           keyboardType="email-address"
@@ -81,7 +81,7 @@ export default function SignUpScreen() {
         {/* Passord */}
         <TextInput
           style={styles.input}
-          placeholder="Passord"
+          placeholder="Password"
           value={password}
           onChangeText={setPassword}
           secureTextEntry
@@ -91,7 +91,7 @@ export default function SignUpScreen() {
         {/* Bekreft passord */}
         <TextInput
           style={styles.input}
-          placeholder="Bekreft passord"
+          placeholder="Confirm password"
           value={confirmPassword}
           onChangeText={setConfirmPassword}
           secureTextEntry
@@ -103,9 +103,9 @@ export default function SignUpScreen() {
           style={styles.dropdownContainer}
           onPress={() => setAgeModalVisible(true)}
         >
-          <Text style={styles.dropdownLabel}>Alder</Text>
+          <Text style={styles.dropdownLabel}>Age</Text>
           <Text style={styles.dropdownText}>
-            {age ? `${age} år` : "Velg alder"}
+            {age ? `${age} age` : "Select age"}
           </Text>
         </TouchableOpacity>
 
@@ -117,7 +117,7 @@ export default function SignUpScreen() {
         >
           <View style={styles.modalOverlay}>
             <View style={styles.modalBox}>
-              <Text style={styles.modalTitle}>Velg alder</Text>
+              <Text style={styles.modalTitle}>Select age</Text>
               <FlatList
                 data={ages}
                 keyExtractor={(item) => item}
@@ -142,9 +142,9 @@ export default function SignUpScreen() {
           style={styles.dropdownContainer}
           onPress={() => setGenderModalVisible(true)}
         >
-          <Text style={styles.dropdownLabel}>Kjønn</Text>
+          <Text style={styles.dropdownLabel}>Sex</Text>
           <Text style={styles.dropdownText}>
-            {gender ? gender : "Velg kjønn"}
+            {gender ? gender : "Select gender"}
           </Text>
         </TouchableOpacity>
 
@@ -156,7 +156,7 @@ export default function SignUpScreen() {
         >
           <View style={styles.modalOverlay}>
             <View style={styles.modalBox}>
-              <Text style={styles.modalTitle}>Velg kjønn</Text>
+              <Text style={styles.modalTitle}>Select gender</Text>
               {genders.map((g) => (
                 <TouchableOpacity
                   key={g}
@@ -176,7 +176,7 @@ export default function SignUpScreen() {
         {/* Adresse */}
         <TextInput
           style={styles.input}
-          placeholder="Adresse"
+          placeholder="Adress"
           value={address}
           onChangeText={setAddress}
           placeholderTextColor="black"
@@ -185,7 +185,7 @@ export default function SignUpScreen() {
         {/* Postnummer */}
         <TextInput
           style={styles.input}
-          placeholder="Postnummer"
+          placeholder="Postal code"
           value={zipCode}
           onChangeText={setZipCode}
           keyboardType="numeric"
@@ -195,7 +195,7 @@ export default function SignUpScreen() {
         {/* Sted */}
         <TextInput
           style={styles.input}
-          placeholder="Sted"
+          placeholder="City"
           value={place}
           onChangeText={setPlace}
           placeholderTextColor="black"
@@ -207,14 +207,14 @@ export default function SignUpScreen() {
             disabled={isLoading}
         >
           <Text style={styles.buttonText}>
-            {isLoading ? "Registrerer..." : "Registrer deg"}
+            {isLoading ? "Registering..." : "Register"}
           </Text>
         </TouchableOpacity>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Har du allerede en konto? </Text>
+          <Text style={styles.footerText}>Already have an account? </Text>
           <TouchableOpacity onPress={() => router.replace("/sign-in")}>
-            <Text style={styles.link}>Logg inn</Text>
+            <Text style={styles.link}>Log in</Text>
           </TouchableOpacity>
         </View>
       </View>

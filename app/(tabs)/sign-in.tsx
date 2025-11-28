@@ -3,8 +3,8 @@ import { router } from "expo-router";
 import { useState } from "react";
 import { Alert, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 export default function LoginScreen() {
-  const [email, setEmail] = useState('test@test.com');
-  const [password, setPassword] = useState('testeren');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const { login } = useAuth();
 
   const handleSignIn = async () => {
@@ -16,7 +16,7 @@ export default function LoginScreen() {
         if (response.success) {
           router.replace("/profile");
         } else {
-          Alert.alert("Login failed", response.error ?? "Ukjent feil");
+          Alert.alert("Login failed", response.error ?? "Unknown error");
         }
       }
     } catch (error) {
@@ -26,12 +26,12 @@ export default function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Logg inn</Text>
-      <Text style={styles.subtitle}>Velkommen tilbake!</Text>
+      <Text style={styles.title}>Log in</Text>
+      <Text style={styles.subtitle}>Welcome back!</Text>
 
       <TextInput
         style={styles.input}
-        placeholder="E-post"
+        placeholder="Email"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -41,7 +41,7 @@ export default function LoginScreen() {
 
       <TextInput
         style={styles.input}
-        placeholder="Passord"
+        placeholder="Password"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -49,12 +49,12 @@ export default function LoginScreen() {
       />
 
       <TouchableOpacity style={styles.button} onPress={handleSignIn}>
-        <Text style={styles.buttonText}>Logg inn</Text>
+        <Text style={styles.buttonText}>Log in</Text>
       </TouchableOpacity>
 
       <View style={styles.footer}>
         <TouchableOpacity onPress={() => router.push("/sign-up")}>
-          <Text style={styles.link}>Registrer deg</Text>
+          <Text style={styles.link}>Register</Text>
         </TouchableOpacity>
       </View>
     </View>

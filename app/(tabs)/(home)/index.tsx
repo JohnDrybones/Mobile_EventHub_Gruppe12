@@ -32,14 +32,14 @@ export default function HomeScreen() {
       <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
 
         <View style={styles.welcomeContainer}>
-          <Text style={styles.title}>Velkommen til EventHub 🎉</Text>
-          <Text style={styles.subtitle}>Oppdag og delta på lokale events</Text>
+          <Text style={styles.title}>Welcome to EventHub 🎉</Text>
+          <Text style={styles.subtitle}>Discover and participate in local events</Text>
         </View>
 
 
 
         <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Populære Events</Text>
+          <Text style={styles.sectionTitle}>Popular Events</Text>
           <View style={listStyle}>
             {events.slice(0, 10).map((event) => (
               <View key={event.id} style={isWideScreen ? styles.cardContainerWide : styles.cardContainerNarrow}>
